@@ -17,9 +17,11 @@ class MyApp extends StatelessWidget {
           title: const Text('Butterfly Finance'),
         ),
         body: Center(
-          child: const Text(
-            'Hello World',
-          ),
+          child: Text('Hello World',
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.deepOrange,
+                  fontSize: 24)),
         ),
       ),
     );
