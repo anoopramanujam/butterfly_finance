@@ -3,8 +3,9 @@ import 'package:intl/intl.dart';
 
 import '../../utils/constants.dart';
 import '../../models/transaction_model.dart';
+import '../../screens/transactions/transaction_screen.dart';
 
-class Home extends StatelessWidget {
+class HomeScreen extends StatelessWidget {
   final List<TransactionModel> transactions = [
     TransactionModel(
         txnDate: DateTime(2021, 6, 1),
@@ -21,11 +22,26 @@ class Home extends StatelessWidget {
   ];
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: transactions.length,
-        itemBuilder: (BuildContext _context, int i) {
-          return _buildRow(transactions[i]);
-        });
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(Constants.titleHome),
+      ),
+      body: (ListView.builder(
+          itemCount: transactions.length,
+          itemBuilder: (BuildContext _context, int i) {
+            return _buildRow(transactions[i]);
+          })),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => TransactionScreen()),
+          );
+        },
+        child: const Icon(Icons.add),
+        // backgroundColor: Colors.green,
+      ),
+    );
   }
 
   Widget _buildRow(TransactionModel transaction) {
