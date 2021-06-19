@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import './screens/home/home.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -12,16 +14,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.lightGreen,
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Butterfly Finance'),
-        ),
-        body: Center(
-          child: const Text(
-            'Hello World',
-          ),
-        ),
-      ),
+      home: HomeScreen(),
     );
   }
 }

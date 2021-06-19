@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.butterfly_finance">
+    package="io.anoopramanujam.butterfly_finance">
    <application
-        android:label="butterfly_finance"
+        android:label="Butterfly Finance"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
