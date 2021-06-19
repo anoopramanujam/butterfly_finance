@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import '../../utils/constants.dart';
 
 class MyDatePicker extends StatelessWidget {
-  MyDatePicker({Key? key, required this.onDateChange});
+  MyDatePicker(
+      {Key? key, required this.onDateChange, required this.selectedDate});
 
-  final DateTime selectedDate = DateTime.now();
+  final DateTime selectedDate;
   final Function onDateChange;
 
   Future<void> _selectDate(BuildContext context) async {

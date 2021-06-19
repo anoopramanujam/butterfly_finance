@@ -4,6 +4,13 @@ class Constants {
   static const titleTransaction = 'New transaction';
   static const datePickerLabel = 'Change';
 
+  static const labelTxnDate = 'Transaction Date';
+  static const labelTxnAmount = 'Amount';
+  static const labelTxnDesc = 'Description';
+
+  static const btnSave = 'Save';
+  static const btnCancel = 'Cancel';
+
 // padding
   static const paddingHeight = 8.0;
   static const paddingWidth = 8.0;

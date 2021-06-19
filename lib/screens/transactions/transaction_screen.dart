@@ -24,15 +24,16 @@ class _TransactionScreenState extends State<TransactionScreen> {
   @override
   Widget build(BuildContext context) {
     final _descriptionController = TextEditingController();
+    final _amountController = TextEditingController();
 
     return Scaffold(
         appBar: AppBar(
           title: Text(Constants.titleTransaction),
         ),
         body: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.symmetric(
+              horizontal: Constants.paddingWidth, vertical: 0),
           child: Column(
-            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               SizedBox(
                 height: Constants.dividerHeight,
@@ -40,35 +41,39 @@ class _TransactionScreenState extends State<TransactionScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Transaction Date'),
+                  Text(Constants.labelTxnDate),
                   Text(DateFormat.yMMMMd().format(_txnDate)),
                   MyDatePicker(
+                    selectedDate: _txnDate,
                     onDateChange: (selectedDate) {
-                      //_txnDate = selectedDate;
-                      //print('Selected ' + selectedDate.toString());
                       _changeDate(selectedDate);
                     },
-                  )
+                  ),
                 ],
               ),
               SizedBox(
                 height: Constants.dividerHeight,
               ),
               MyTextField(
+                controller: _amountController,
+                hintText: Constants.labelTxnAmount,
+                isNumeric: true,
+              ),
+              MyTextField(
                 controller: _descriptionController,
-                hintText: 'Description',
+                hintText: Constants.labelTxnDesc,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   MyButton(
-                    label: 'Cancel',
+                    label: Constants.btnCancel,
                     onPressed: () {
                       Navigator.pop(context);
                     },
                   ),
                   MyButton(
-                    label: 'Save',
+                    label: Constants.btnSave,
                     onPressed: () {
                       print(_descriptionController.text +
                           ' on ' +
