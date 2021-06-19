@@ -16,19 +16,40 @@ class TransactionScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ElevatedButton(
+                MyButton(
+                  label: 'Cancel',
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('Cancel'),
                 ),
-                ElevatedButton(
+                MyButton(
+                  label: 'Save',
                   onPressed: () {},
-                  child: Text('Save'),
                 ),
               ],
             )
           ],
         ));
+  }
+}
+
+class MyButton extends StatelessWidget {
+  const MyButton({Key? key, required this.label, required this.onPressed})
+      : super(key: key);
+
+  final label;
+  final Function onPressed;
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: Constants.buttonWidth,
+      height: Constants.buttonHeight,
+      child: ElevatedButton(
+        onPressed: () {
+          onPressed();
+        },
+        child: Text(label),
+      ),
+    );
   }
 }
