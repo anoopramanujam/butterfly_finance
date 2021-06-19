@@ -1,0 +1,33 @@
+workflows:
+  play-it:
+    name: Push to Play Store Internal Test
+    instance_type: mac_mini
+    max_build_duration: 60
+    environment:
+      vars:
+        FCI_KEYSTORE: Encrypted(...)
+        FCI_KEYSTORE_PASSWORD: Encrypted(...)
+        FCI_KEY_PASSWORD: Encrypted(...)
+        FCI_KEY_ALIAS: Encrypted(...)      
+      flutter: stable
+    cache:
+      cache_paths:
+        - ~/.pub-cache
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: 'main'
+          include: true
+          source: true
+      cancel_previous_builds: false
+    scripts:
+      - ...
+    artifacts:
+      - build/**/outputs/**/*.aab
+    publishing:
+      email:
+        recipients:
+          - anoop.r.mundapallil@gmail.com
+      scripts:
+        - echo 'Post-publish script'
