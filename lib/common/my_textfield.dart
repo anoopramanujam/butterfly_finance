@@ -12,16 +12,11 @@ class MyTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: Constants.textFieldHeight,
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-            horizontal: Constants.paddingWidth,
-            vertical: Constants.paddingHeight),
-        child: TextField(
-          controller: controller,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(),
-            hintText: hintText,
-          ),
+      child: TextField(
+        controller: controller,
+        decoration: InputDecoration(
+          border: OutlineInputBorder(),
+          hintText: hintText,
         ),
       ),
     );
