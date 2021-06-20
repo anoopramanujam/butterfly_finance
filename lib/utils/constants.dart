@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Constants {
   // Screen titles
   static const titleHome = 'Butterfly Finance (Rel 3)';
@@ -25,4 +27,8 @@ class Constants {
 
   // Options
   static const decimalPlaces = 2;
+
+  static Color? colorDeleteSwipes = Colors.deepOrange.shade100;
+
+  static const indexNewRecord = -1;
 }
