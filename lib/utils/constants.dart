@@ -29,4 +29,6 @@ class Constants {
   static const decimalPlaces = 2;
 
   static Color? colorDeleteSwipes = Colors.deepOrange.shade100;
+
+  static const indexNewRecord = -1;
 }

@@ -10,13 +10,44 @@ import '../../common/my_textfield.dart';
 import '../../common/my_date_picker.dart';
 
 class TransactionScreen extends StatefulWidget {
+  const TransactionScreen({Key? key, this.txnId = Constants.indexNewRecord})
+      : super(key: key);
+
+  final txnId;
+
   //final _txnDate = DateTime.now();
   @override
   _TransactionScreenState createState() => _TransactionScreenState();
 }
 
 class _TransactionScreenState extends State<TransactionScreen> {
-  DateTime _txnDate = DateTime.now();
+  late DateTime _txnDate;
+  late String _txnDescription;
+  late double _txnAmount = 0.0;
+
+  late TextEditingController _descriptionController;
+  late TextEditingController _amountController;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.txnId != Constants.indexNewRecord) {
+      TransactionNotifier txnNotifier = context.read<TransactionNotifier>();
+      TransactionModel txnDefault = txnNotifier.getTransaction(widget.txnId);
+      _txnDescription = txnDefault.description;
+      _txnDate = txnDefault.txnDate;
+      _txnAmount = txnDefault.amount;
+    } else {
+      _txnDate = DateTime.now();
+      _txnDescription = '';
+      _txnAmount = 0.0;
+    }
+    _descriptionController = TextEditingController(text: _txnDescription);
+    _amountController = TextEditingController(
+        text: _txnAmount == 0.0
+            ? ''
+            : _txnAmount.toStringAsFixed(Constants.decimalPlaces));
+  }
 
   _changeDate(changedDate) {
     setState(() {
@@ -26,9 +57,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _descriptionController = TextEditingController();
-    final _amountController = TextEditingController();
-
     return Scaffold(
         appBar: AppBar(
           title: Text(Constants.titleTransaction),
@@ -85,7 +113,14 @@ class _TransactionScreenState extends State<TransactionScreen> {
                             txnDate: _txnDate,
                             amount: amount,
                             description: _descriptionController.text);
-                        context.read<TransactionNotifier>().add(transaction);
+
+                        if (widget.txnId == Constants.indexNewRecord) {
+                          context.read<TransactionNotifier>().add(transaction);
+                        } else {
+                          context
+                              .read<TransactionNotifier>()
+                              .update(transaction, widget.txnId);
+                        }
 
                         Navigator.pop(context);
                       },

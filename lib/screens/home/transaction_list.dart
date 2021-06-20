@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../utils/constants.dart';
 import '../../models/transaction_model.dart';
 import '../../notifiers/transaction_notifier.dart';
+import '../transactions/transaction_screen.dart';
 
 class TransactionList extends StatelessWidget {
   @override
@@ -40,6 +41,15 @@ class TransactionList extends StatelessWidget {
           ],
         ),
         subtitle: Text(txnDate),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => TransactionScreen(
+                      txnId: index,
+                    )),
+          );
+        },
       )),
     );
   }
