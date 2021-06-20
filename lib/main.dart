@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import './screens/home/home.dart';
+import './notifiers/transaction_notifier.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(ChangeNotifierProvider(
+      create: (context) => TransactionNotifier(), child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
