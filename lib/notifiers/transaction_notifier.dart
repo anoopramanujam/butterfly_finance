@@ -12,4 +12,8 @@ class TransactionNotifier with ChangeNotifier {
     _transactions.add(transaction);
     notifyListeners();
   }
+
+  void delete(int i) {
+    _transactions.removeAt(i);
+  }
 }
