@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class Constants {
   // Screen titles
-  static const titleHome = 'Butterfly Finance (Rel 3)';
+  static const titleHome = 'Butterfly Finance';
   static const titleTransaction = 'New transaction';
   static const datePickerLabel = 'Change';
 
