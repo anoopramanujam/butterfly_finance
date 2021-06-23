@@ -14,8 +14,6 @@ Widget createHomeScreen() => ChangeNotifierProvider(
 void main() {
   testWidgets('Build Home Screen', (tester) async {
     await tester.pumpWidget(createHomeScreen());
-
-    final titleFinder = find.text('Butterfly Finance');
-    expect(titleFinder, findsOneWidget);
+    expect(find.text('Butterfly Finance'), findsOneWidget);
   });
 }
