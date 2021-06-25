@@ -30,5 +30,5 @@ class Constants {
 
   static Color? colorDeleteSwipes = Colors.deepOrange.shade100;
 
-  static const indexNewRecord = -1;
+  static const indexNewRecord = 0;
 }
