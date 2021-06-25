@@ -2,10 +2,10 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../models/transaction_model.dart';
 
-class DatabaseService {
-  static final DatabaseService _instance = DatabaseService._internal();
-  factory DatabaseService() => _instance;
-  DatabaseService._internal();
+class DatabaseHelper {
+  static final DatabaseHelper _instance = DatabaseHelper._internal();
+  factory DatabaseHelper() => _instance;
+  DatabaseHelper._internal();
 
   static Database? _db;
 
@@ -16,14 +16,14 @@ class DatabaseService {
     return openDatabase(
       join(path, 'butterfly_finance.db'),
       onCreate: (database, version) async {
-        await database.execute(
-          '''CREATE TABLE transactions (
+        await database.execute('''
+              CREATE TABLE transactions (
               txnId INTEGER PRIMARY KEY AUTOINCREMENT, 
-              txnDate INTEGER NOT NULL
+              txnDate INTEGER NOT NULL,
               description TEXT NOT NULL,
-              amount REAL NOT NULL,              
-              )''',
-        );
+              amount REAL NOT NULL             
+              )
+              ''');
       },
       version: 1,
     );

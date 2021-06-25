@@ -1,29 +1,32 @@
 import 'package:flutter/material.dart';
 import '../models/transaction_model.dart';
+import '../utils/dbHelper.dart';
 
 class TransactionNotifier with ChangeNotifier {
-  final List<TransactionModel> _transactions = [];
+  final db = DatabaseHelper();
 
-  List<TransactionModel> get transactions {
-    return _transactions;
+  Future<List<TransactionModel>> get transactions async {
+    final transactions = await db.getTransactions();
+    return transactions;
   }
 
-  TransactionModel getTransaction(int index) {
-    return _transactions[index];
+  Future<TransactionModel> getTransaction(int txnId) async {
+    final transaction = await db.getTransaction(txnId);
+    return transaction;
   }
 
-  void add(TransactionModel transaction) {
-    _transactions.add(transaction);
+  Future<void> add(TransactionModel transaction) async {
+    await db.insertTransaction(transaction);
     notifyListeners();
   }
 
-  void delete(int i) {
-    _transactions.removeAt(i);
+  Future<void> delete(int txnId) async {
+    await db.deleteTransaction(txnId);
     notifyListeners();
   }
 
-  void update(TransactionModel transaction, int index) {
-    _transactions[index] = transaction;
+  Future<void> update(TransactionModel transaction, int txnId) async {
+    await db.updateTransaction(transaction, txnId);
     notifyListeners();
   }
 }

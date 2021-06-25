@@ -8,7 +8,7 @@ class TransactionModel {
 
   TransactionModel(
       {required this.txnDate,
-      required this.amount,
+      this.amount = 0.0,
       this.description = '',
       this.txnId = Constants.indexNewRecord});
 
