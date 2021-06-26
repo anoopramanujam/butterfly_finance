@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import '../utils/constants.dart';
 
 class TransactionModel {
@@ -14,14 +15,14 @@ class TransactionModel {
 
   TransactionModel.fromMap(Map<String, dynamic> res)
       : txnId = res['txnId'],
-        txnDate = res['txnDate'],
+        txnDate = DateTime.parse(res['txnDate']),
         description = res['description'],
         amount = res['amount'];
 
   Map<String, Object?> toMap() {
     return {
-      'txnId': txnId,
-      'txnDate': txnDate,
+      // 'txnId': txnId,
+      'txnDate': DateFormat('yyyy-MM-dd').format(txnDate),
       'description': description,
       'amount': amount,
     };

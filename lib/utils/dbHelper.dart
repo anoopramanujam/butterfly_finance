@@ -19,7 +19,7 @@ class DatabaseHelper {
         await database.execute('''
               CREATE TABLE transactions (
               txnId INTEGER PRIMARY KEY AUTOINCREMENT, 
-              txnDate INTEGER NOT NULL,
+              txnDate TEXT NOT NULL,
               description TEXT NOT NULL,
               amount REAL NOT NULL             
               )
@@ -46,7 +46,7 @@ class DatabaseHelper {
   Future<int> insertTransaction(TransactionModel transaction) async {
     int result = 0;
     final Database db = await _instance.db;
-    result = await db.insert('contacts', transaction.toMap());
+    result = await db.insert('transactions', transaction.toMap());
     return result;
   }
 

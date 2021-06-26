@@ -18,7 +18,7 @@ class _TransactionListState extends State<TransactionList> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    transactions = context.read<TransactionNotifier>().transactions;
+    transactions = Provider.of<TransactionNotifier>(context).transactions;
   }
 
   @override
@@ -30,6 +30,7 @@ class _TransactionListState extends State<TransactionList> {
     //     itemBuilder: (BuildContext _context, int i) {
     //       return _buildRow(transactions, i, txnNotifier, _context);
     //     });
+    //transactions = context.watch<TransactionNotifier>().transactions;
     return FutureBuilder<List<TransactionModel>>(
         future: transactions,
         builder: (BuildContext context,
@@ -58,13 +59,14 @@ class _TransactionListState extends State<TransactionList> {
   Widget _buildRow(TransactionModel transaction, BuildContext context) {
     final String txnDate = DateFormat.yMMMMd().format(transaction.txnDate);
     return Dismissible(
-      key: Key(transaction.description + transaction.txnDate.toString()),
+      key: UniqueKey(),
       direction: DismissDirection.endToStart,
       background: Container(color: Constants.colorDeleteSwipes),
-      onDismissed: (direction) {
+      onDismissed: (direction) async {
         //txnNotifier.delete(index);
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Transaction to be deleted')));
+        await context.read<TransactionNotifier>().delete(transaction.txnId);
+        // ScaffoldMessenger.of(context)
+        //     .showSnackBar(SnackBar(content: Text('Transaction deleted')));
       },
       child: (ListTile(
         title: Row(
