@@ -112,8 +112,17 @@ class _TransactionScreenState extends State<TransactionScreen> {
                     MyButton(
                       label: Constants.btnSave,
                       onPressed: () {
-                        double amount = double.parse(_amountController.text);
-                        assert(amount is double);
+                        double amount =
+                            double.tryParse(_amountController.text) ??
+                                Constants.errInvalidAmount;
+                        //assert(amount is double);
+                        if (amount == Constants.errInvalidAmount) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('Please enter a valid amount'),
+                            backgroundColor: Constants.colorErrorMessage,
+                          ));
+                          return;
+                        }
                         final transaction = TransactionModel(
                             txnDate: _txnDate,
                             amount: amount,

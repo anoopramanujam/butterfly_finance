@@ -65,8 +65,8 @@ class _TransactionListState extends State<TransactionList> {
       onDismissed: (direction) async {
         //txnNotifier.delete(index);
         await context.read<TransactionNotifier>().delete(transaction.txnId);
-        // ScaffoldMessenger.of(context)
-        //     .showSnackBar(SnackBar(content: Text('Transaction deleted')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Transaction deleted')));
       },
       child: (ListTile(
         title: Row(
@@ -82,7 +82,7 @@ class _TransactionListState extends State<TransactionList> {
             context,
             MaterialPageRoute(
                 builder: (context) => TransactionScreen(
-                      transaction: TransactionModel(txnDate: DateTime.now()),
+                      transaction: transaction,
                     )),
           );
         },
