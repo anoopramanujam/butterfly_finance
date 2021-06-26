@@ -2,7 +2,7 @@
     package="io.anoopramanujam.butterfly_finance">
    <application
         android:label="Butterfly Finance"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

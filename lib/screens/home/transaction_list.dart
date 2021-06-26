@@ -7,28 +7,64 @@ import '../../models/transaction_model.dart';
 import '../../notifiers/transaction_notifier.dart';
 import '../transactions/transaction_screen.dart';
 
-class TransactionList extends StatelessWidget {
+class TransactionList extends StatefulWidget {
+  @override
+  _TransactionListState createState() => _TransactionListState();
+}
+
+class _TransactionListState extends State<TransactionList> {
+  Future<List<TransactionModel>>? transactions;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    transactions = Provider.of<TransactionNotifier>(context).transactions;
+  }
+
   @override
   Widget build(BuildContext context) {
-    TransactionNotifier txnNotifier = context.watch<TransactionNotifier>();
-    final List<TransactionModel> transactions = txnNotifier.transactions;
-    return ListView.builder(
-        itemCount: transactions.length,
-        itemBuilder: (BuildContext _context, int i) {
-          return _buildRow(transactions, i, txnNotifier, _context);
+    // TransactionNotifier txnNotifier = context.watch<TransactionNotifier>();
+    //  = txnNotifier.transactions;
+    // return ListView.builder(
+    //     itemCount: transactions.length,
+    //     itemBuilder: (BuildContext _context, int i) {
+    //       return _buildRow(transactions, i, txnNotifier, _context);
+    //     });
+    //transactions = context.watch<TransactionNotifier>().transactions;
+    return FutureBuilder<List<TransactionModel>>(
+        future: transactions,
+        builder: (BuildContext context,
+            AsyncSnapshot<List<TransactionModel>> snapshot) {
+          if (snapshot.hasData) {
+            final realTransactions = snapshot.data ?? [];
+            final listTransactions =
+                realTransactions.asMap().entries.map((transactionMap) {
+              //realTransactions.asMap().entries.map((transactionMap) {
+              return _buildRow(transactionMap.value, context);
+            });
+            final divided = realTransactions.isNotEmpty
+                ? ListTile.divideTiles(
+                        tiles: listTransactions, context: context)
+                    .toList()
+                : <Widget>[];
+            return ListView(children: divided);
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
         });
   }
 
-  Widget _buildRow(List<TransactionModel> transactions, int index,
-      TransactionNotifier txnNotifier, BuildContext context) {
-    final transaction = transactions[index];
+  Widget _buildRow(TransactionModel transaction, BuildContext context) {
     final String txnDate = DateFormat.yMMMMd().format(transaction.txnDate);
     return Dismissible(
-      key: Key(transaction.description + transaction.txnDate.toString()),
+      key: UniqueKey(),
       direction: DismissDirection.endToStart,
       background: Container(color: Constants.colorDeleteSwipes),
-      onDismissed: (direction) {
-        txnNotifier.delete(index);
+      onDismissed: (direction) async {
+        //txnNotifier.delete(index);
+        await context.read<TransactionNotifier>().delete(transaction.txnId);
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text('Transaction deleted')));
       },
@@ -46,7 +82,7 @@ class TransactionList extends StatelessWidget {
             context,
             MaterialPageRoute(
                 builder: (context) => TransactionScreen(
-                      txnId: index,
+                      transaction: transaction,
                     )),
           );
         },

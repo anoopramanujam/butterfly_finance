@@ -10,10 +10,10 @@ import '../../common/my_textfield.dart';
 import '../../common/my_date_picker.dart';
 
 class TransactionScreen extends StatefulWidget {
-  const TransactionScreen({Key? key, this.txnId = Constants.indexNewRecord})
+  const TransactionScreen({Key? key, required this.transaction})
       : super(key: key);
 
-  final txnId;
+  final TransactionModel transaction;
 
   //final _txnDate = DateTime.now();
   @override
@@ -21,9 +21,10 @@ class TransactionScreen extends StatefulWidget {
 }
 
 class _TransactionScreenState extends State<TransactionScreen> {
+  late int _txnId;
   late DateTime _txnDate;
   late String _txnDescription;
-  late double _txnAmount = 0.0;
+  late double _txnAmount;
 
   late TextEditingController _descriptionController;
   late TextEditingController _amountController;
@@ -31,17 +32,21 @@ class _TransactionScreenState extends State<TransactionScreen> {
   @override
   void initState() {
     super.initState();
-    if (widget.txnId != Constants.indexNewRecord) {
-      TransactionNotifier txnNotifier = context.read<TransactionNotifier>();
-      TransactionModel txnDefault = txnNotifier.getTransaction(widget.txnId);
-      _txnDescription = txnDefault.description;
-      _txnDate = txnDefault.txnDate;
-      _txnAmount = txnDefault.amount;
-    } else {
-      _txnDate = DateTime.now();
-      _txnDescription = '';
-      _txnAmount = 0.0;
-    }
+    // if (widget.transaction.txnId != Constants.indexNewRecord) {
+    //   TransactionNotifier txnNotifier = context.read<TransactionNotifier>();
+    //   TransactionModel txnDefault = txnNotifier.getTransaction(widget.txnId);
+    //   _txnDescription = txnDefault.description;
+    //   _txnDate = txnDefault.txnDate;
+    //   _txnAmount = txnDefault.amount;
+    // } else {
+    //   _txnDate = DateTime.now();
+    //   _txnDescription = '';
+    //   _txnAmount = 0.0;
+    // }
+    _txnId = widget.transaction.txnId;
+    _txnDate = widget.transaction.txnDate;
+    _txnDescription = widget.transaction.description;
+    _txnAmount = widget.transaction.amount;
     _descriptionController = TextEditingController(text: _txnDescription);
     _amountController = TextEditingController(
         text: _txnAmount == 0.0
@@ -107,19 +112,28 @@ class _TransactionScreenState extends State<TransactionScreen> {
                     MyButton(
                       label: Constants.btnSave,
                       onPressed: () {
-                        double amount = double.parse(_amountController.text);
-                        assert(amount is double);
+                        double amount =
+                            double.tryParse(_amountController.text) ??
+                                Constants.errInvalidAmount;
+                        //assert(amount is double);
+                        if (amount == Constants.errInvalidAmount) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('Please enter a valid amount'),
+                            backgroundColor: Constants.colorErrorMessage,
+                          ));
+                          return;
+                        }
                         final transaction = TransactionModel(
                             txnDate: _txnDate,
                             amount: amount,
                             description: _descriptionController.text);
 
-                        if (widget.txnId == Constants.indexNewRecord) {
+                        if (_txnId == Constants.indexNewRecord) {
                           context.read<TransactionNotifier>().add(transaction);
                         } else {
                           context
                               .read<TransactionNotifier>()
-                              .update(transaction, widget.txnId);
+                              .update(transaction, _txnId);
                         }
 
                         Navigator.pop(context);
