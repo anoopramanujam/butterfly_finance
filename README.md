@@ -9,10 +9,9 @@ Easily manage your finances. Absolute privacy guaranteed. No ads, no network con
 * Free, open-source and ad-free
 
 ### Features in progress:
-* Category support
+* Double-entry accounting
 
 ### Proposed features:
-* Double-entry accounting
 * Reports
 * Repeat-transaction feature *to track upcoming cash flow needs*
 * Favorite transactions *to speed up entry*
