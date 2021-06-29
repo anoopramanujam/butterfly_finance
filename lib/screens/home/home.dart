@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../utils/constants.dart';
 import '../../screens/transactions/transaction_screen.dart';
-import './transaction_list.dart';
+import '../../common/transaction/transaction_list.dart';
 
 class HomeScreen extends StatelessWidget {
   @override

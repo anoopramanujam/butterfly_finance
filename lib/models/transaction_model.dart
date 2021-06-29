@@ -7,11 +7,12 @@ class TransactionModel {
   final String description;
   final double amount;
 
-  TransactionModel(
-      {required this.txnDate,
-      this.amount = 0.0,
-      this.description = '',
-      this.txnId = Constants.indexNewRecord});
+  TransactionModel({
+    required this.txnDate,
+    this.amount = 0.0,
+    this.description = '',
+    this.txnId = Constants.indexNewRecord,
+  });
 
   TransactionModel.fromMap(Map<String, dynamic> res)
       : txnId = res['txnId'],
@@ -19,12 +20,11 @@ class TransactionModel {
         description = res['description'],
         amount = res['amount'];
 
-  Map<String, Object?> toMap() {
-    return {
-      // 'txnId': txnId,
-      'txnDate': DateFormat('yyyy-MM-dd').format(txnDate),
-      'description': description,
-      'amount': amount,
-    };
-  }
+  // No txnId needed since it is an autoincrement key
+  Map<String, Object?> toMap() => {
+        // Date is stored in database in '2021-06-22' format
+        'txnDate': DateFormat('yyyy-MM-dd').format(txnDate),
+        'description': description,
+        'amount': amount,
+      };
 }
