@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 class Constants {
   // Screen titles
   static const titleHome = 'Butterfly Finance';
-  static const titleTransaction = 'New transaction';
+  static const titleAddTransaction = 'New entry';
+  static const titleEditTransaction = 'Edit entry';
   static const datePickerLabel = 'Change';
 
   static const labelTxnDate = 'Transaction Date';
@@ -12,6 +13,9 @@ class Constants {
 
   static const btnSave = 'Save';
   static const btnCancel = 'Cancel';
+
+  static const infoTransactionDelete = 'Transaction Deleted';
+  static const errInvalidAmount = 'Please enter a valid amount';
 
 // padding
   static const paddingHeight = 8.0;
@@ -32,6 +36,5 @@ class Constants {
   static Color? colorErrorMessage = Colors.red;
 
   static const indexNewRecord = 0;
-
-  static const errInvalidAmount = 0.0;
+  static const invalidAmount = 0.0;
 }
