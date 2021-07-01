@@ -1,6 +1,20 @@
 import 'package:flutter/material.dart';
 
 class Constants {
+  static const accountBalance = 0;
+  static const accountAsset = 1;
+  static const accountLiability = 2;
+  static const accountIncome = 3;
+  static const accountExpense = 4;
+
+  static const List<String> accountLabels = [
+    'Balance',
+    'Assets',
+    'Liability',
+    'Income',
+    'Expense',
+  ];
+
   // Screen titles
   static const titleHome = 'Butterfly Finance';
   static const titleAddTransaction = 'New entry';

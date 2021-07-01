@@ -11,6 +11,20 @@ class DatabaseHelper {
 
   Future<Database> get db async => _db ??= await initializeDB();
 
+  static const migrationScripts = [
+    '''
+              CREATE TABLE accounts (
+              accountId INTEGER PRIMARY KEY AUTOINCREMENT, 
+              accountName TEXT NOT NULL,
+              accountType INTEGER NOT NULL,
+              accountDescriptiom TEXT NOT NULL)       
+    ''',
+    'PRAGMA foreign_keys = 0',
+    'ALTER TABLE transactions ADD COLUMN fromAccount INTEGER NOT NULL REFERENCES accounts(accountId) DEFAULT 0',
+    'ALTER TABLE transactions ADD COLUMN toAccount INTEGER NOT NULL REFERENCES accounts(accountId) DEFAULT 0',
+    'PRAGMA foreign_keys = 1',
+  ];
+
   Future<Database> initializeDB() async {
     String path = await getDatabasesPath();
     return openDatabase(
@@ -25,7 +39,12 @@ class DatabaseHelper {
               )
               ''');
       },
-      version: 1,
+      onUpgrade: (database, oldVersion, newVersion) async {
+        for (int i = oldVersion - 1; i < newVersion - 1; i++) {
+          await database.execute(migrationScripts[i]);
+        }
+      },
+      version: migrationScripts.length + 1,
     );
   }
 
