@@ -38,24 +38,31 @@ class _HomeScreenState extends State<HomeScreen>
     super.dispose();
   }
 
+  TabBar get _tabBar => TabBar(
+        indicatorColor: Colors.greenAccent,
+        controller: _tabController,
+        tabs: [
+          Tab(
+            icon: Icon(Icons.view_agenda_outlined),
+            text: Constants.tabHome,
+          ),
+          Tab(
+              icon: Icon(Icons.account_balance_outlined),
+              text: Constants.tabAccounts),
+          Tab(icon: Icon(Icons.insights_outlined), text: Constants.tabReports),
+        ],
+      );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: [
-            Tab(
-              icon: Icon(Icons.view_agenda_outlined),
-              text: Constants.tabHome,
-            ),
-            Tab(
-                icon: Icon(Icons.account_balance_outlined),
-                text: Constants.tabAccounts),
-            Tab(
-                icon: Icon(Icons.insights_outlined),
-                text: Constants.tabReports),
-          ],
+        bottom: PreferredSize(
+          preferredSize: _tabBar.preferredSize,
+          child: ColoredBox(
+            color: Colors.lightGreen.shade300,
+            child: _tabBar,
+          ),
         ),
         title: const Text(Constants.titleHome),
       ),
