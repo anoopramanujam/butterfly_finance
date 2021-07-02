@@ -2,6 +2,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../models/transaction_model.dart';
 
+import 'db_scripts.dart';
+
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();
   factory DatabaseHelper() => _instance;
@@ -11,40 +13,18 @@ class DatabaseHelper {
 
   Future<Database> get db async => _db ??= await initializeDB();
 
-  static const migrationScripts = [
-    '''
-              CREATE TABLE accounts (
-              accountId INTEGER PRIMARY KEY AUTOINCREMENT, 
-              accountName TEXT NOT NULL,
-              accountType INTEGER NOT NULL,
-              accountDescriptiom TEXT NOT NULL)       
-    ''',
-    'PRAGMA foreign_keys = 0',
-    'ALTER TABLE transactions ADD COLUMN fromAccount INTEGER NOT NULL REFERENCES accounts(accountId) DEFAULT 0',
-    'ALTER TABLE transactions ADD COLUMN toAccount INTEGER NOT NULL REFERENCES accounts(accountId) DEFAULT 0',
-    'PRAGMA foreign_keys = 1',
-  ];
-
   Future<Database> initializeDB() async {
     String path = await getDatabasesPath();
     return openDatabase(
       join(path, 'butterfly_finance.db'),
       onCreate: (database, version) async {
-        await database.execute('''
-              CREATE TABLE transactions (
-              txnId INTEGER PRIMARY KEY AUTOINCREMENT, 
-              txnDate TEXT NOT NULL,
-              description TEXT NOT NULL,
-              amount REAL NOT NULL             
-              )
-              ''');
+        Batch batch = database.batch();
+        DbScripts.initScripts.forEach((sql) {
+          batch.execute(sql);
+        });
+        await batch.commit();
       },
-      onUpgrade: (database, oldVersion, newVersion) async {
-        for (int i = oldVersion - 1; i < newVersion - 1; i++) {
-          await database.execute(migrationScripts[i]);
-        }
-      },
-      version: migrationScripts.length + 1,
+      version: 1,
     );
   }
 

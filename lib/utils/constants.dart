@@ -15,6 +15,10 @@ class Constants {
     'Expense',
   ];
 
+  static const tabHome = 'Dashboard';
+  static const tabAccounts = 'Accounts';
+  static const tabReports = 'Reports';
+
   // Screen titles
   static const titleHome = 'Butterfly Finance';
   static const titleAddTransaction = 'New entry';

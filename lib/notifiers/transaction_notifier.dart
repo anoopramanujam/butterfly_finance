@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/transaction_model.dart';
-import '../utils/dbHelper.dart';
+import '../utils/db_helper.dart';
 
 class TransactionNotifier with ChangeNotifier {
   final db = DatabaseHelper();
