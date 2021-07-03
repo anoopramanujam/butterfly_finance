@@ -3,10 +3,15 @@ import 'package:provider/provider.dart';
 
 import './screens/home/home.dart';
 import './notifiers/transaction_notifier.dart';
+import './notifiers/account_notifier.dart';
 
 void main() {
-  runApp(ChangeNotifierProvider(
-      create: (context) => TransactionNotifier(), child: MyApp()));
+  runApp(
+    MultiProvider(providers: [
+      ChangeNotifierProvider(create: (context) => TransactionNotifier()),
+      ChangeNotifierProvider(create: (context) => AccountNotifier()),
+    ], child: MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {

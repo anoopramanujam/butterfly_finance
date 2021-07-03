@@ -1,11 +1,10 @@
-import 'dart:ui';
-
 import 'package:butterfly_finance/models/transaction_model.dart';
 import 'package:flutter/material.dart';
 
 import '../../utils/constants.dart';
 import '../../screens/transactions/transaction_screen.dart';
 import '../../common/transaction/transaction_list.dart';
+import '../../common/account/account_list.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -39,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   TabBar get _tabBar => TabBar(
-        indicatorColor: Colors.greenAccent,
+        indicatorColor: Colors.lightGreen.shade400,
         controller: _tabController,
         tabs: [
           Tab(
@@ -70,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen>
         controller: _tabController,
         children: [
           TransactionList(),
-          Icon(Icons.directions_transit),
+          AccountList(),
           Icon(Icons.directions_bike),
         ],
       ),

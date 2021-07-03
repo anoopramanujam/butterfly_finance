@@ -35,6 +35,8 @@ class Constants {
   static const infoTransactionDelete = 'Transaction Deleted';
   static const errInvalidAmount = 'Please enter a valid amount';
 
+  static const infoAccountDelete = 'TODO: Account Deleted';
+
 // padding
   static const paddingHeight = 8.0;
   static const paddingWidth = 8.0;

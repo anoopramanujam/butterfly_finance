@@ -11,9 +11,9 @@ class DbScripts {
     '''
       CREATE TABLE accounts (
         accountId INTEGER PRIMARY KEY AUTOINCREMENT, 
-        accountName TEXT NOT NULL,
-        accountType INTEGER NOT NULL,
-        accountDescriptiom TEXT NOT NULL
+        name TEXT NOT NULL,
+        type INTEGER NOT NULL,
+        description TEXT NOT NULL
       )       
     ''',
     'PRAGMA foreign_keys = 0',
@@ -22,5 +22,9 @@ class DbScripts {
     '''ALTER TABLE transactions ADD COLUMN toAccount INTEGER NOT NULL 
       REFERENCES accounts(accountId) DEFAULT 0''',
     'PRAGMA foreign_keys = 1',
+    '''INSERT INTO accounts (name, type, description)
+        VALUES ('Balance',0,'Brought/Carry Forward')''',
+    '''INSERT INTO accounts (name, type, description)
+        VALUES ('Cash',1,'Cash in Hand')''',
   ];
 }

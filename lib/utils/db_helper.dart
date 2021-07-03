@@ -1,6 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../models/transaction_model.dart';
+import '../models/account_model.dart';
 
 import 'db_scripts.dart';
 
@@ -37,8 +38,11 @@ class DatabaseHelper {
 
   Future<TransactionModel> getTransaction(int txnId) async {
     final Database db = await initializeDB();
-    final List<Map<String, Object?>> queryResult =
-        await db.query('transactions', where: 'txnId = ? ', whereArgs: [txnId]);
+    final List<Map<String, Object?>> queryResult = await db.query(
+      'transactions',
+      where: 'txnId = ? ',
+      whereArgs: [txnId],
+    );
     return queryResult.map((e) => TransactionModel.fromMap(e)).first;
   }
 
@@ -66,6 +70,62 @@ class DatabaseHelper {
       transaction.toMap(),
       where: "txnId = ?",
       whereArgs: [txnId],
+    );
+  }
+
+  Future<List<AccountModel>> getAllAccounts() async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.query(
+      'accounts',
+      orderBy: 'type, name',
+    );
+    return queryResult.map((e) => AccountModel.fromMap(e)).toList();
+  }
+
+  Future<List<AccountModel>> getAccounts(int accountType) async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.query(
+      'accounts',
+      where: 'type = ? ',
+      whereArgs: [accountType],
+      orderBy: 'name',
+    );
+    return queryResult.map((e) => AccountModel.fromMap(e)).toList();
+  }
+
+  Future<AccountModel> getAccount(int accountId) async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.query(
+      'accounts',
+      where: 'accountId = ? ',
+      whereArgs: [accountId],
+    );
+    return queryResult.map((e) => AccountModel.fromMap(e)).first;
+  }
+
+  Future<int> insertAccount(AccountModel account) async {
+    int result = 0;
+    final Database db = await _instance.db;
+    result = await db.insert('accounts', account.toMap());
+    return result;
+  }
+
+  Future<void> deleteAccount(int accountId) async {
+    final db = await initializeDB();
+    await db.delete(
+      'accounts',
+      where: "accountId = ?",
+      whereArgs: [accountId],
+    );
+  }
+
+  Future<void> updateAccount(AccountModel account, int accountId) async {
+    final db = await initializeDB();
+    await db.update(
+      'accounts',
+      account.toMap(),
+      where: "accountId = ?",
+      whereArgs: [accountId],
     );
   }
 }
