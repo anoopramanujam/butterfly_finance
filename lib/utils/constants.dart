@@ -30,6 +30,8 @@ class Constants {
   static const titleAddTransaction = 'New entry';
   static const titleEditTransaction = 'Edit entry';
   static const datePickerLabel = 'Change';
+  static const titleAddAccount = 'New Account';
+  static const titleEditAccount = 'Edit Account';
 
   static const labelTxnDate = 'Transaction Date';
   static const labelTxnAmount = 'Amount';
@@ -43,6 +45,8 @@ class Constants {
 
   static const infoTransactionDelete = 'Transaction Deleted';
   static const errInvalidAmount = 'Please enter a valid amount';
+  static const errInvalidAccountType = 'Please select a valid account type';
+  static const errInvalidAccountName = 'Please enter a valid account name';
 
   static const infoAccountDelete = 'TODO: Account Deleted';
 

@@ -13,8 +13,8 @@ class AccountScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text(account.accountId == Constants.indexNewRecord
-              ? Constants.titleAddTransaction
-              : Constants.titleEditTransaction),
+              ? Constants.titleAddAccount
+              : Constants.titleEditAccount),
         ),
         body: AccountAddEdit(
           account: account,

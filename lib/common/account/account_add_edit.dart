@@ -119,6 +119,23 @@ class _AccountAddEditState extends State<AccountAddEdit> {
                     MyButton(
                       label: Constants.btnSave,
                       onPressed: () async {
+                        if (_selectedAccount == Constants.accountBalance) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content:
+                                const Text(Constants.errInvalidAccountType),
+                            backgroundColor: Constants.colorErrorMessage,
+                          ));
+                          return;
+                        }
+                        if (_nameController.text.trim() == '') {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content:
+                                const Text(Constants.errInvalidAccountName),
+                            backgroundColor: Constants.colorErrorMessage,
+                          ));
+                          return;
+                        }
+
                         final account = AccountModel(
                           name: _nameController.text,
                           description: _descriptionController.text,
