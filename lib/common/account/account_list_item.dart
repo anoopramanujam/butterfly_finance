@@ -1,3 +1,4 @@
+import 'package:butterfly_finance/screens/account/account_screen.dart';
 import 'package:flutter/material.dart';
 // import 'package:provider/provider.dart';
 
@@ -31,15 +32,15 @@ class AccountListItem extends StatelessWidget {
           ],
         ),
         // subtitle: Text(txnDate),
-        // onTap: () {
-        //   Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (context) => TransactionScreen(
-        //               transaction: transaction,
-        //             )),
-        //   );
-        // },
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => AccountScreen(
+                      account: account,
+                    )),
+          );
+        },
       )),
     );
   }

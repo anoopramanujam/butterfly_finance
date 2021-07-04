@@ -26,7 +26,7 @@ class _AccountAddEditState extends State<AccountAddEdit> {
   late TextEditingController _descriptionController;
   late TextEditingController _nameController;
 
-  List<bool> _selections = List.generate(4, (_) => false);
+  late List<bool> _selections;
   late int _selectedAccount;
 
   @override
@@ -37,6 +37,9 @@ class _AccountAddEditState extends State<AccountAddEdit> {
     _name = widget.account.name;
     _descriptionController = TextEditingController(text: _description);
     _nameController = TextEditingController(text: _name);
+    _selections = List.generate(
+        4, (index) => (index == widget.account.type - 1) ? true : false);
+    _selectedAccount = widget.account.type;
   }
 
   @override
@@ -51,11 +54,28 @@ class _AccountAddEditState extends State<AccountAddEdit> {
                   height: Constants.dividerHeight,
                 ),
                 ToggleButtons(
+                  borderRadius: BorderRadius.circular(Constants.toggleRadius),
                   children: <Widget>[
-                    Text('Asset'),
-                    Text('Liability'),
-                    Text('Income'),
-                    Text('Expense'),
+                    SizedBox(
+                        width: Constants.toggleWidth,
+                        child: Center(
+                            child: Text(Constants
+                                .accountLabels[Constants.accountAsset]))),
+                    SizedBox(
+                        width: Constants.toggleWidth,
+                        child: Center(
+                            child: Text(Constants
+                                .accountLabels[Constants.accountLiability]))),
+                    SizedBox(
+                        width: Constants.toggleWidth,
+                        child: Center(
+                            child: Text(Constants
+                                .accountLabels[Constants.accountIncome]))),
+                    SizedBox(
+                        width: Constants.toggleWidth,
+                        child: Center(
+                            child: Text(Constants
+                                .accountLabels[Constants.accountExpense]))),
                   ],
                   onPressed: (int index) {
                     setState(() {

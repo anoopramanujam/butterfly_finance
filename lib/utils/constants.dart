@@ -9,7 +9,7 @@ class Constants {
 
   static const List<String> accountLabels = [
     'Balance',
-    'Assets',
+    'Asset',
     'Liability',
     'Income',
     'Expense',
@@ -56,6 +56,8 @@ class Constants {
   // input size
   static const buttonWidth = 100.0;
   static const buttonHeight = 45.0;
+  static const toggleWidth = 72.0;
+  static const toggleRadius = 24.0;
   static const textFieldHeight = 100.0;
 
   // Options
