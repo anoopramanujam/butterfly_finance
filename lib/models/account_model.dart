@@ -8,8 +8,8 @@ class AccountModel {
 
   AccountModel({
     this.accountId = Constants.indexNewRecord,
-    required this.name,
-    required this.type,
+    this.name = '',
+    this.type = 0,
     this.description = '',
   });
 

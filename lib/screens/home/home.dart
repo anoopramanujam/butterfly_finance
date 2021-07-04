@@ -1,8 +1,10 @@
+import 'package:butterfly_finance/models/account_model.dart';
 import 'package:butterfly_finance/models/transaction_model.dart';
 import 'package:flutter/material.dart';
 
 import '../../utils/constants.dart';
 import '../../screens/transactions/transaction_screen.dart';
+import '../../screens/account/account_screen.dart';
 import '../../common/transaction/transaction_list.dart';
 import '../../common/account/account_list.dart';
 
@@ -43,12 +45,14 @@ class _HomeScreenState extends State<HomeScreen>
         tabs: [
           Tab(
             icon: Icon(Icons.view_agenda_outlined),
-            text: Constants.tabHome,
+            text: Constants.tabLabels[Constants.tabHome],
           ),
           Tab(
               icon: Icon(Icons.account_balance_outlined),
-              text: Constants.tabAccounts),
-          Tab(icon: Icon(Icons.insights_outlined), text: Constants.tabReports),
+              text: Constants.tabLabels[Constants.tabAccounts]),
+          Tab(
+              icon: Icon(Icons.insights_outlined),
+              text: Constants.tabLabels[Constants.tabReports]),
         ],
       );
 
@@ -73,17 +77,22 @@ class _HomeScreenState extends State<HomeScreen>
           Icon(Icons.directions_bike),
         ],
       ),
-      floatingActionButton: _tabController.index == 0
+      floatingActionButton: _tabController.index <= 1
           ? FloatingActionButton(
               onPressed: () {
                 Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => TransactionScreen(
-                            transaction:
-                                TransactionModel(txnDate: DateTime.now()),
-                          )),
-                );
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          (_tabController.index == Constants.tabHome
+                              ? TransactionScreen(
+                                  transaction:
+                                      TransactionModel(txnDate: DateTime.now()),
+                                )
+                              : AccountScreen(
+                                  account: AccountModel(),
+                                )),
+                    ));
               },
               child: const Icon(Icons.add),
             )

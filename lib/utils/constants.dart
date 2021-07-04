@@ -15,9 +15,15 @@ class Constants {
     'Expense',
   ];
 
-  static const tabHome = 'Dashboard';
-  static const tabAccounts = 'Accounts';
-  static const tabReports = 'Reports';
+  static const tabHome = 0;
+  static const tabAccounts = 1;
+  static const tabReports = 2;
+
+  static const List<String> tabLabels = [
+    'Dashboard',
+    'Accounts',
+    'Reports',
+  ];
 
   // Screen titles
   static const titleHome = 'Butterfly Finance';
@@ -28,6 +34,9 @@ class Constants {
   static const labelTxnDate = 'Transaction Date';
   static const labelTxnAmount = 'Amount';
   static const labelTxnDesc = 'Description';
+
+  static const labelAccountName = 'Account Name';
+  static const labelAccountDesc = 'Description';
 
   static const btnSave = 'Save';
   static const btnCancel = 'Cancel';
