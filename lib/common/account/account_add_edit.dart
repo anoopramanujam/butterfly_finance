@@ -6,6 +6,7 @@ import '../../utils/constants.dart';
 
 import '../../common/my_button.dart';
 import '../../common/my_textfield.dart';
+import '../../common/my_toggle_button.dart';
 
 /// Add and Edit transactions
 class AccountAddEdit extends StatefulWidget {
@@ -26,8 +27,9 @@ class _AccountAddEditState extends State<AccountAddEdit> {
   late TextEditingController _descriptionController;
   late TextEditingController _nameController;
 
-  late List<bool> _selections;
-  late int _selectedAccount;
+  late int _selectedAccountType;
+
+  late List<Map> _toggleItems;
 
   @override
   void initState() {
@@ -37,9 +39,22 @@ class _AccountAddEditState extends State<AccountAddEdit> {
     _name = widget.account.name;
     _descriptionController = TextEditingController(text: _description);
     _nameController = TextEditingController(text: _name);
-    _selections = List.generate(
-        4, (index) => (index == widget.account.type - 1) ? true : false);
-    _selectedAccount = widget.account.type;
+
+    _selectedAccountType = widget.account.type;
+
+    const assetTypes = [
+      Constants.accountAsset,
+      Constants.accountLiability,
+      Constants.accountIncome,
+      Constants.accountExpense,
+    ];
+    _toggleItems = assetTypes.map((assetType) {
+      return {
+        'title': Constants.accountLabels[assetType],
+        'value': assetType,
+        'isSelected': (widget.account.type == assetType) ? true : false
+      };
+    }).toList();
   }
 
   @override
@@ -53,51 +68,17 @@ class _AccountAddEditState extends State<AccountAddEdit> {
                 SizedBox(
                   height: Constants.dividerHeight,
                 ),
-                ToggleButtons(
-                  borderRadius: BorderRadius.circular(Constants.toggleRadius),
-                  children: <Widget>[
-                    SizedBox(
-                        width: Constants.toggleWidth,
-                        child: Center(
-                            child: Text(Constants
-                                .accountLabels[Constants.accountAsset]))),
-                    SizedBox(
-                        width: Constants.toggleWidth,
-                        child: Center(
-                            child: Text(Constants
-                                .accountLabels[Constants.accountLiability]))),
-                    SizedBox(
-                        width: Constants.toggleWidth,
-                        child: Center(
-                            child: Text(Constants
-                                .accountLabels[Constants.accountIncome]))),
-                    SizedBox(
-                        width: Constants.toggleWidth,
-                        child: Center(
-                            child: Text(Constants
-                                .accountLabels[Constants.accountExpense]))),
-                  ],
-                  onPressed: (int index) {
-                    setState(() {
-                      for (int buttonIndex = 0;
-                          buttonIndex < _selections.length;
-                          buttonIndex++) {
-                        if (buttonIndex == index) {
-                          _selections[buttonIndex] = true;
-                          // we are ignoring Balance Account
-                          _selectedAccount = index + 1;
-                        } else {
-                          _selections[buttonIndex] = false;
-                        }
-                      }
-                    });
+                MyToggleButton(
+                  toggleItems: _toggleItems,
+                  onPressed: (int selectedValue) {
+                    _selectedAccountType = selectedValue;
                   },
-                  isSelected: _selections,
                 ),
+
                 SizedBox(
                   height: Constants.dividerHeight,
                 ),
-                // Amount field
+                // Name field
                 MyTextField(
                   controller: _nameController,
                   hintText: Constants.labelAccountName,
@@ -119,27 +100,13 @@ class _AccountAddEditState extends State<AccountAddEdit> {
                     MyButton(
                       label: Constants.btnSave,
                       onPressed: () async {
-                        if (_selectedAccount == Constants.accountBalance) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content:
-                                const Text(Constants.errInvalidAccountType),
-                            backgroundColor: Constants.colorErrorMessage,
-                          ));
+                        if (!_isValidationOk()) {
                           return;
                         }
-                        if (_nameController.text.trim() == '') {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content:
-                                const Text(Constants.errInvalidAccountName),
-                            backgroundColor: Constants.colorErrorMessage,
-                          ));
-                          return;
-                        }
-
                         final account = AccountModel(
                           name: _nameController.text,
                           description: _descriptionController.text,
-                          type: _selectedAccount,
+                          type: _selectedAccountType,
                         );
 
                         if (_accountId == Constants.indexNewRecord) {
@@ -157,5 +124,23 @@ class _AccountAddEditState extends State<AccountAddEdit> {
                 )
               ],
             )));
+  }
+
+  bool _isValidationOk() {
+    if (_selectedAccountType == Constants.accountBalance) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: const Text(Constants.errInvalidAccountType),
+        backgroundColor: Constants.colorErrorMessage,
+      ));
+      return false;
+    }
+    if (_nameController.text.trim() == '') {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: const Text(Constants.errInvalidAccountName),
+        backgroundColor: Constants.colorErrorMessage,
+      ));
+      return false;
+    }
+    return true;
   }
 }
