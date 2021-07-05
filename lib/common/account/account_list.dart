@@ -22,18 +22,7 @@ class _AccountListState extends State<AccountList> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // transactions = Provider.of<TransactionNotifier>(context).transactions;
     final accountNotifier = Provider.of<AccountNotifier>(context);
-    // _assets = accountNotifier.getAccounts(Constants.accountAsset);
-    // _liabilities = accountNotifier.getAccounts(Constants.accountLiability);
-    // _incomes = accountNotifier.getAccounts(Constants.accountIncome);
-    // _expenses = accountNotifier.getAccounts(Constants.accountExpense);
-
-    // _accounts = (_assets ?? []) +
-    //     (_liabilities ?? []) +
-    //     (_incomes ?? []) +
-    //     (_expenses ?? []);
-
     _accounts = accountNotifier.getAllAccounts();
   }
 

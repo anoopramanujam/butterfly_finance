@@ -9,6 +9,8 @@ import '../../common/my_button.dart';
 import '../../common/my_textfield.dart';
 import '../../common/my_date_picker.dart';
 import '../../common/my_toggle_button.dart';
+import '../../models/account_model.dart';
+import '../../notifiers/account_notifier.dart';
 
 /// Add and Edit transactions
 class TransactionAddEdit extends StatefulWidget {
@@ -27,12 +29,16 @@ class _TransactionAddEditState extends State<TransactionAddEdit> {
   late String _txnDescription;
   late double _txnAmount;
 
+  Future<List<AccountModel>>? _accounts;
+
   // textbox controllers
   late TextEditingController _descriptionController;
   late TextEditingController _amountController;
 
   late int _selectedTxnType;
   late List<Map> _toggleItems;
+
+  String? dropdownValue;
 
   @override
   void initState() {
@@ -64,6 +70,14 @@ class _TransactionAddEditState extends State<TransactionAddEdit> {
     }).toList();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final accountNotifier = Provider.of<AccountNotifier>(context);
+    _accounts = accountNotifier.getAllAccounts();
+    // dropdownValue = '';
+  }
+
   /// User has changed date
   _changeDate(changedDate) {
     setState(() {
@@ -88,6 +102,59 @@ class _TransactionAddEditState extends State<TransactionAddEdit> {
                     _selectedTxnType = selectedValue;
                   },
                 ),
+                SizedBox(
+                  height: Constants.dividerHeight,
+                ),
+
+                FutureBuilder<List<AccountModel>>(
+                    future: _accounts,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<AccountModel>> snapshot) {
+                      if (snapshot.hasData) {
+                        final realAccounts = snapshot.data ?? [];
+
+                        List<String> listAccounts = [];
+
+                        for (int i = 0; i < realAccounts.length; i++) {
+                          var _account = realAccounts[i];
+
+                          listAccounts.add(_account.name);
+                        }
+
+                        // if (dropdownValue == '') {
+                        dropdownValue ??= listAccounts[0];
+                        // }
+
+                        return DropdownButton<String>(
+                          value: dropdownValue,
+                          icon: const Icon(Icons.arrow_downward),
+                          iconSize: 24,
+                          elevation: 16,
+                          // style: const TextStyle(color: Colors.),
+                          underline: Container(
+                            height: 2,
+                            color: Colors.green.shade200,
+                          ),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              dropdownValue = newValue!;
+                            });
+                          },
+                          items: listAccounts
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        );
+                      } else {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                    }),
+
                 SizedBox(
                   height: Constants.dividerHeight,
                 ),
@@ -145,7 +212,8 @@ class _TransactionAddEditState extends State<TransactionAddEdit> {
                         final transaction = TransactionModel(
                             txnDate: _txnDate,
                             amount: amount,
-                            description: _descriptionController.text);
+                            description: _descriptionController.text,
+                            type: _selectedTxnType);
 
                         if (_txnId == Constants.indexNewRecord) {
                           context.read<TransactionNotifier>().add(transaction);
@@ -164,3 +232,6 @@ class _TransactionAddEditState extends State<TransactionAddEdit> {
             )));
   }
 }
+
+
+st

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/transaction_model.dart';
+import '../../models/account_model.dart';
 import '../../notifiers/transaction_notifier.dart';
 import './transaction_list_item.dart';
 
@@ -12,6 +13,7 @@ class TransactionList extends StatefulWidget {
 
 class _TransactionListState extends State<TransactionList> {
   Future<List<TransactionModel>>? transactions;
+  Future<List<AccountModel>>? accounts;
 
   @override
   // Special Note
