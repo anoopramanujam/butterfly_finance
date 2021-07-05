@@ -9,6 +9,7 @@ import '../../common/my_button.dart';
 import '../../common/my_textfield.dart';
 import '../../common/my_date_picker.dart';
 import '../../common/my_toggle_button.dart';
+import '../../common/my_dropdown.dart';
 import '../../models/account_model.dart';
 import '../../notifiers/account_notifier.dart';
 
@@ -35,10 +36,7 @@ class _TransactionAddEditState extends State<TransactionAddEdit> {
   late TextEditingController _descriptionController;
   late TextEditingController _amountController;
 
-  late int _selectedTxnType;
-  late List<Map> _toggleItems;
-
-  String? dropdownValue;
+  // String? dropdownValue;
 
   @override
   void initState() {
@@ -54,20 +52,6 @@ class _TransactionAddEditState extends State<TransactionAddEdit> {
         text: _txnAmount == 0.0
             ? ''
             : _txnAmount.toStringAsFixed(Constants.decimalPlaces));
-
-    _selectedTxnType = widget.transaction.type;
-    const txnTypes = [
-      Constants.txnIncome,
-      Constants.txnTransfer,
-      Constants.txnExpense,
-    ];
-    _toggleItems = txnTypes.map((txnType) {
-      return {
-        'title': Constants.txnTypeLabels[txnType],
-        'value': txnType,
-        'isSelected': (widget.transaction.type == txnType) ? true : false
-      };
-    }).toList();
   }
 
   @override
@@ -96,12 +80,7 @@ class _TransactionAddEditState extends State<TransactionAddEdit> {
                 SizedBox(
                   height: Constants.dividerHeight,
                 ),
-                MyToggleButton(
-                  toggleItems: _toggleItems,
-                  onPressed: (int selectedValue) {
-                    _selectedTxnType = selectedValue;
-                  },
-                ),
+
                 SizedBox(
                   height: Constants.dividerHeight,
                 ),
@@ -113,40 +92,22 @@ class _TransactionAddEditState extends State<TransactionAddEdit> {
                       if (snapshot.hasData) {
                         final realAccounts = snapshot.data ?? [];
 
-                        List<String> listAccounts = [];
+                        List<Map> listAccounts = [];
 
                         for (int i = 0; i < realAccounts.length; i++) {
                           var _account = realAccounts[i];
 
-                          listAccounts.add(_account.name);
+                          listAccounts.add({
+                            'title': _account.name,
+                            'value': _account.accountId,
+                            'isSelected': (i == 0) ? true : false,
+                            'type': _account.type,
+                          });
                         }
 
-                        // if (dropdownValue == '') {
-                        dropdownValue ??= listAccounts[0];
-                        // }
-
-                        return DropdownButton<String>(
-                          value: dropdownValue,
-                          icon: const Icon(Icons.arrow_downward),
-                          iconSize: 24,
-                          elevation: 16,
-                          // style: const TextStyle(color: Colors.),
-                          underline: Container(
-                            height: 2,
-                            color: Colors.green.shade200,
-                          ),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              dropdownValue = newValue!;
-                            });
-                          },
-                          items: listAccounts
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
+                        return AccountDropdowns(
+                          accounts: listAccounts,
+                          transaction: widget.transaction,
                         );
                       } else {
                         return Center(
@@ -210,10 +171,11 @@ class _TransactionAddEditState extends State<TransactionAddEdit> {
                           return;
                         }
                         final transaction = TransactionModel(
-                            txnDate: _txnDate,
-                            amount: amount,
-                            description: _descriptionController.text,
-                            type: _selectedTxnType);
+                          txnDate: _txnDate,
+                          amount: amount,
+                          description: _descriptionController.text,
+                          // type: _selectedTxnType,
+                        );
 
                         if (_txnId == Constants.indexNewRecord) {
                           context.read<TransactionNotifier>().add(transaction);
@@ -233,5 +195,108 @@ class _TransactionAddEditState extends State<TransactionAddEdit> {
   }
 }
 
+class AccountDropdowns extends StatefulWidget {
+  const AccountDropdowns({
+    Key? key,
+    required this.transaction,
+    required this.accounts,
+  }) : super(key: key);
 
-st
+  final TransactionModel transaction;
+  final List<Map> accounts;
+
+  @override
+  _AccountDropdownsState createState() => _AccountDropdownsState();
+}
+
+class _AccountDropdownsState extends State<AccountDropdowns> {
+  late int _selectedTxnType;
+  late List<Map> _toggleItems;
+
+  late List<Map> _fromAccounts;
+  late List<Map> _toAccounts;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedTxnType = widget.transaction.type;
+    const txnTypes = [
+      Constants.txnIncome,
+      Constants.txnTransfer,
+      Constants.txnExpense,
+    ];
+    _toggleItems = txnTypes.map((txnType) {
+      return {
+        'title': Constants.txnTypeLabels[txnType],
+        'value': txnType,
+        'isSelected': (widget.transaction.type == txnType) ? true : false
+      };
+    }).toList();
+  }
+
+  List<Map> fromAccount(int selectedTxnType) {
+    List<Map> allAccounts = widget.accounts;
+    List<Map> returns = [];
+    allAccounts.forEach((element) {
+      if ([
+        Constants.accountIncome,
+        Constants.accountAsset,
+        Constants.accountLiability,
+      ].contains(element['type'])) {
+        if (returns.length == 0) {
+          element['isSelected'] = true;
+        } else {
+          element['isSelected'] = false;
+        }
+        returns.add(element);
+      }
+    });
+    return returns;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_selectedTxnType == Constants.txnIncome) {
+      _fromAccounts = widget.accounts
+          .where((element) => ([
+                Constants.accountIncome,
+                Constants.accountAsset,
+                Constants.accountLiability,
+              ].contains(element['type'])))
+          .toList();
+    } else {
+      _fromAccounts = widget.accounts;
+    }
+    _toAccounts = widget.accounts;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      MyToggleButton(
+        toggleItems: _toggleItems,
+        onPressed: (int selectedValue) {
+          setState(() {
+            _selectedTxnType = selectedValue;
+            _fromAccounts = fromAccount(selectedValue);
+          });
+        },
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Text('From Account'),
+          MyDropDown(dropdownItems: _fromAccounts),
+        ],
+      ),
+      // Row(
+      //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      //   children: [
+      //     Text('To Account'),
+      //     MyDropDown(dropdownItems: _toAccounts),
+      //   ],
+      // ),
+    ]);
+  }
+}
