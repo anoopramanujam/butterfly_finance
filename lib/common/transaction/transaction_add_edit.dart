@@ -30,6 +30,8 @@ class _TransactionAddEditState extends State<TransactionAddEdit> {
   late String _txnDescription;
   late double _txnAmount;
 
+  late int _selectedTxnType;
+
   Future<List<AccountModel>>? _accounts;
 
   // textbox controllers
@@ -52,6 +54,8 @@ class _TransactionAddEditState extends State<TransactionAddEdit> {
         text: _txnAmount == 0.0
             ? ''
             : _txnAmount.toStringAsFixed(Constants.decimalPlaces));
+
+    _selectedTxnType = widget.transaction.type;
   }
 
   @override
@@ -211,6 +215,8 @@ class AccountDropdowns extends StatefulWidget {
 
 class _AccountDropdownsState extends State<AccountDropdowns> {
   late int _selectedTxnType;
+  late String _fromAccountValue;
+  late String _toAccountValue;
   late List<Map> _toggleItems;
 
   late List<Map> _fromAccounts;
@@ -232,43 +238,46 @@ class _AccountDropdownsState extends State<AccountDropdowns> {
         'isSelected': (widget.transaction.type == txnType) ? true : false
       };
     }).toList();
+    _fromAccounts = getAccounts(_selectedTxnType, true);
+    _toAccounts = getAccounts(_selectedTxnType, false);
+
+    _fromAccountValue = _fromAccounts
+        .where((element) => element['isSelected'] == true)
+        .first['value'];
+    _toAccountValue = _toAccounts
+        .where((element) => element['isSelected'] == true)
+        .first['value'];
   }
 
-  List<Map> fromAccount(int selectedTxnType) {
-    List<Map> allAccounts = widget.accounts;
-    List<Map> returns = [];
-    allAccounts.forEach((element) {
-      if ([
-        Constants.accountIncome,
-        Constants.accountAsset,
-        Constants.accountLiability,
-      ].contains(element['type'])) {
-        if (returns.length == 0) {
+  List<Map> getAccounts(int selectedTxnType, bool fromAccount) {
+    List<Map> returnAccounts = [];
+    List<int> accountTypes = [];
+    switch (selectedTxnType) {
+      case Constants.txnIncome:
+        accountTypes = fromAccount
+            ? [Constants.accountIncome]
+            : [Constants.accountAsset, Constants.accountLiability];
+        break;
+      case Constants.txnTransfer:
+        accountTypes = [Constants.accountAsset, Constants.accountLiability];
+        break;
+      case Constants.txnExpense:
+        accountTypes = fromAccount
+            ? [Constants.accountAsset, Constants.accountLiability]
+            : [Constants.accountExpense];
+        break;
+    }
+    widget.accounts.forEach((element) {
+      if (accountTypes.contains(element['type'])) {
+        if (returnAccounts.length == 0) {
           element['isSelected'] = true;
         } else {
           element['isSelected'] = false;
         }
-        returns.add(element);
+        returnAccounts.add(element);
       }
     });
-    return returns;
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_selectedTxnType == Constants.txnIncome) {
-      _fromAccounts = widget.accounts
-          .where((element) => ([
-                Constants.accountIncome,
-                Constants.accountAsset,
-                Constants.accountLiability,
-              ].contains(element['type'])))
-          .toList();
-    } else {
-      _fromAccounts = widget.accounts;
-    }
-    _toAccounts = widget.accounts;
+    return returnAccounts;
   }
 
   @override
@@ -279,7 +288,8 @@ class _AccountDropdownsState extends State<AccountDropdowns> {
         onPressed: (int selectedValue) {
           setState(() {
             _selectedTxnType = selectedValue;
-            _fromAccounts = fromAccount(selectedValue);
+            _fromAccounts = getAccounts(selectedValue, true);
+            _toAccounts = getAccounts(_selectedTxnType, false);
           });
         },
       ),
@@ -287,16 +297,26 @@ class _AccountDropdownsState extends State<AccountDropdowns> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Text('From Account'),
-          MyDropDown(dropdownItems: _fromAccounts),
+          MyDropDown(
+            dropdownItems: _fromAccounts,
+            onChanged: (val) {
+              _fromAccountValue = val;
+            },
+          ),
         ],
       ),
-      // Row(
-      //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      //   children: [
-      //     Text('To Account'),
-      //     MyDropDown(dropdownItems: _toAccounts),
-      //   ],
-      // ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Text('To Account'),
+          MyDropDown(
+            dropdownItems: _toAccounts,
+            onChanged: (val) {
+              _toAccountValue = val;
+            },
+          ),
+        ],
+      ),
     ]);
   }
 }

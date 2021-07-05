@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
 class MyDropDown extends StatefulWidget {
-  const MyDropDown({Key? key, required this.dropdownItems}) : super(key: key);
+  const MyDropDown(
+      {Key? key, required this.dropdownItems, required this.onChanged})
+      : super(key: key);
 
   final List<Map> dropdownItems;
+  final Function onChanged;
 
   @override
   _MyDropDownState createState() => _MyDropDownState();
@@ -15,19 +18,18 @@ class _MyDropDownState extends State<MyDropDown> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    selectedValue = (widget.dropdownItems
-            .where((element) => element['isSelected'] == true)
-            .first)['value']
-        .toString();
+    selectedValue = getSelectedValue();
   }
 
   void didUpdateWidget(oldWidget) {
     super.didUpdateWidget(oldWidget);
-    selectedValue = (widget.dropdownItems
-            .where((element) => element['isSelected'] == true)
-            .first)['value']
-        .toString();
+    selectedValue = getSelectedValue();
   }
+
+  String getSelectedValue() => (widget.dropdownItems
+          .where((element) => element['isSelected'] == true)
+          .first)['value']
+      .toString();
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +46,7 @@ class _MyDropDownState extends State<MyDropDown> {
         setState(() {
           selectedValue = newValue!;
         });
+        widget.onChanged(newValue!);
       },
       items: widget.dropdownItems.map<DropdownMenuItem<String>>((Map item) {
         return DropdownMenuItem<String>(
