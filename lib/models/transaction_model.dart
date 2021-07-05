@@ -8,6 +8,7 @@ class TransactionModel {
   final double amount;
   final int fromAccount;
   final int toAccount;
+  final int type;
 
   TransactionModel({
     required this.txnDate,
@@ -16,6 +17,7 @@ class TransactionModel {
     this.txnId = Constants.indexNewRecord,
     this.fromAccount = Constants.accountBalance,
     this.toAccount = Constants.accountBalance,
+    this.type = Constants.txnTransfer,
   });
 
   TransactionModel.fromMap(Map<String, dynamic> res)
@@ -24,7 +26,8 @@ class TransactionModel {
         description = res['description'],
         amount = res['amount'],
         fromAccount = res['fromAccount'],
-        toAccount = res['toAccount'];
+        toAccount = res['toAccount'],
+        type = res['type'];
 
   // No txnId needed since it is an autoincrement key
   Map<String, Object?> toMap() => {
@@ -34,5 +37,6 @@ class TransactionModel {
         'amount': amount,
         'fromAccount': fromAccount,
         'toAccount': toAccount,
+        'type': type,
       };
 }

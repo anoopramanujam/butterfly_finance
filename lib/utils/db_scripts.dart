@@ -5,7 +5,8 @@ class DbScripts {
         txnId INTEGER PRIMARY KEY AUTOINCREMENT, 
         txnDate TEXT NOT NULL,
         description TEXT NOT NULL,
-        amount REAL NOT NULL             
+        amount REAL NOT NULL,
+        type INTEGER NOT NULL             
       )
     ''',
     '''
@@ -27,4 +28,8 @@ class DbScripts {
     '''INSERT INTO accounts (name, type, description)
         VALUES ('Cash',1,'Cash in Hand')''',
   ];
+
+  // static const finalScripts = [
+  //   initScripts,
+  // ];
 }

@@ -7,10 +7,20 @@ class Constants {
   static const accountIncome = 3;
   static const accountExpense = 4;
 
-  static const List<String> accountLabels = [
+  static const accountLabels = [
     'Balance',
     'Asset',
     'Liability',
+    'Income',
+    'Expense',
+  ];
+
+  static const txnTransfer = 0;
+  static const txnIncome = 1;
+  static const txnExpense = 2;
+
+  static const txnTypeLabels = [
+    'Transfer',
     'Income',
     'Expense',
   ];

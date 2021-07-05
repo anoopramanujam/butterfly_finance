@@ -8,6 +8,7 @@ import '../../utils/constants.dart';
 import '../../common/my_button.dart';
 import '../../common/my_textfield.dart';
 import '../../common/my_date_picker.dart';
+import '../../common/my_toggle_button.dart';
 
 /// Add and Edit transactions
 class TransactionAddEdit extends StatefulWidget {
@@ -30,6 +31,9 @@ class _TransactionAddEditState extends State<TransactionAddEdit> {
   late TextEditingController _descriptionController;
   late TextEditingController _amountController;
 
+  late int _selectedTxnType;
+  late List<Map> _toggleItems;
+
   @override
   void initState() {
     super.initState();
@@ -44,6 +48,20 @@ class _TransactionAddEditState extends State<TransactionAddEdit> {
         text: _txnAmount == 0.0
             ? ''
             : _txnAmount.toStringAsFixed(Constants.decimalPlaces));
+
+    _selectedTxnType = widget.transaction.type;
+    const txnTypes = [
+      Constants.txnIncome,
+      Constants.txnTransfer,
+      Constants.txnExpense,
+    ];
+    _toggleItems = txnTypes.map((txnType) {
+      return {
+        'title': Constants.txnTypeLabels[txnType],
+        'value': txnType,
+        'isSelected': (widget.transaction.type == txnType) ? true : false
+      };
+    }).toList();
   }
 
   /// User has changed date
@@ -61,6 +79,15 @@ class _TransactionAddEditState extends State<TransactionAddEdit> {
                 horizontal: Constants.paddingWidth, vertical: 0),
             child: Column(
               children: [
+                SizedBox(
+                  height: Constants.dividerHeight,
+                ),
+                MyToggleButton(
+                  toggleItems: _toggleItems,
+                  onPressed: (int selectedValue) {
+                    _selectedTxnType = selectedValue;
+                  },
+                ),
                 SizedBox(
                   height: Constants.dividerHeight,
                 ),
