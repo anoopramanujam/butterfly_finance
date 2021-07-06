@@ -8,10 +8,9 @@ import '../../utils/constants.dart';
 import '../../common/my_button.dart';
 import '../../common/my_textfield.dart';
 import '../../common/my_date_picker.dart';
-import '../../common/my_toggle_button.dart';
-import '../../common/my_dropdown.dart';
 import '../../models/account_model.dart';
 import '../../notifiers/account_notifier.dart';
+import './account_dropdowns.dart';
 
 /// Add and Edit transactions
 class TransactionAddEdit extends StatefulWidget {
@@ -31,6 +30,8 @@ class _TransactionAddEditState extends State<TransactionAddEdit> {
   late double _txnAmount;
 
   late int _selectedTxnType;
+  late int _selectedFromAccount;
+  late int _selectedToAccount;
 
   Future<List<AccountModel>>? _accounts;
 
@@ -56,6 +57,13 @@ class _TransactionAddEditState extends State<TransactionAddEdit> {
             : _txnAmount.toStringAsFixed(Constants.decimalPlaces));
 
     _selectedTxnType = widget.transaction.type;
+    if (widget.transaction.txnId != Constants.indexNewRecord) {
+      _selectedFromAccount = widget.transaction.fromAccount;
+      _selectedToAccount = widget.transaction.toAccount;
+    } else {
+      _selectedFromAccount = Constants.indexNewRecord;
+      _selectedToAccount = Constants.indexNewRecord;
+    }
   }
 
   @override
@@ -63,6 +71,7 @@ class _TransactionAddEditState extends State<TransactionAddEdit> {
     super.didChangeDependencies();
     final accountNotifier = Provider.of<AccountNotifier>(context);
     _accounts = accountNotifier.getAllAccounts();
+    _selectedTxnType = widget.transaction.type;
     // dropdownValue = '';
   }
 
@@ -104,7 +113,6 @@ class _TransactionAddEditState extends State<TransactionAddEdit> {
                           listAccounts.add({
                             'title': _account.name,
                             'value': _account.accountId,
-                            'isSelected': (i == 0) ? true : false,
                             'type': _account.type,
                           });
                         }
@@ -112,6 +120,9 @@ class _TransactionAddEditState extends State<TransactionAddEdit> {
                         return AccountDropdowns(
                           accounts: listAccounts,
                           transaction: widget.transaction,
+                          selectedTxnType: _selectedTxnType.toString(),
+                          selectedFromAccount: _selectedFromAccount,
+                          selectedToAccount: _selectedToAccount,
                         );
                       } else {
                         return Center(
@@ -196,127 +207,5 @@ class _TransactionAddEditState extends State<TransactionAddEdit> {
                 )
               ],
             )));
-  }
-}
-
-class AccountDropdowns extends StatefulWidget {
-  const AccountDropdowns({
-    Key? key,
-    required this.transaction,
-    required this.accounts,
-  }) : super(key: key);
-
-  final TransactionModel transaction;
-  final List<Map> accounts;
-
-  @override
-  _AccountDropdownsState createState() => _AccountDropdownsState();
-}
-
-class _AccountDropdownsState extends State<AccountDropdowns> {
-  late int _selectedTxnType;
-  late String _fromAccountValue;
-  late String _toAccountValue;
-  late List<Map> _toggleItems;
-
-  late List<Map> _fromAccounts;
-  late List<Map> _toAccounts;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedTxnType = widget.transaction.type;
-    const txnTypes = [
-      Constants.txnIncome,
-      Constants.txnTransfer,
-      Constants.txnExpense,
-    ];
-    _toggleItems = txnTypes.map((txnType) {
-      return {
-        'title': Constants.txnTypeLabels[txnType],
-        'value': txnType,
-        'isSelected': (widget.transaction.type == txnType) ? true : false
-      };
-    }).toList();
-    _fromAccounts = getAccounts(_selectedTxnType, true);
-    _toAccounts = getAccounts(_selectedTxnType, false);
-
-    _fromAccountValue = _fromAccounts
-        .where((element) => element['isSelected'] == true)
-        .first['value'];
-    _toAccountValue = _toAccounts
-        .where((element) => element['isSelected'] == true)
-        .first['value'];
-  }
-
-  List<Map> getAccounts(int selectedTxnType, bool fromAccount) {
-    List<Map> returnAccounts = [];
-    List<int> accountTypes = [];
-    switch (selectedTxnType) {
-      case Constants.txnIncome:
-        accountTypes = fromAccount
-            ? [Constants.accountIncome]
-            : [Constants.accountAsset, Constants.accountLiability];
-        break;
-      case Constants.txnTransfer:
-        accountTypes = [Constants.accountAsset, Constants.accountLiability];
-        break;
-      case Constants.txnExpense:
-        accountTypes = fromAccount
-            ? [Constants.accountAsset, Constants.accountLiability]
-            : [Constants.accountExpense];
-        break;
-    }
-    widget.accounts.forEach((element) {
-      if (accountTypes.contains(element['type'])) {
-        if (returnAccounts.length == 0) {
-          element['isSelected'] = true;
-        } else {
-          element['isSelected'] = false;
-        }
-        returnAccounts.add(element);
-      }
-    });
-    return returnAccounts;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(children: [
-      MyToggleButton(
-        toggleItems: _toggleItems,
-        onPressed: (int selectedValue) {
-          setState(() {
-            _selectedTxnType = selectedValue;
-            _fromAccounts = getAccounts(selectedValue, true);
-            _toAccounts = getAccounts(_selectedTxnType, false);
-          });
-        },
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text('From Account'),
-          MyDropDown(
-            dropdownItems: _fromAccounts,
-            onChanged: (val) {
-              _fromAccountValue = val;
-            },
-          ),
-        ],
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text('To Account'),
-          MyDropDown(
-            dropdownItems: _toAccounts,
-            onChanged: (val) {
-              _toAccountValue = val;
-            },
-          ),
-        ],
-      ),
-    ]);
   }
 }

@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 
 class MyDropDown extends StatefulWidget {
   const MyDropDown(
-      {Key? key, required this.dropdownItems, required this.onChanged})
+      {Key? key,
+      required this.dropdownItems,
+      required this.selectedValue,
+      required this.onChanged})
       : super(key: key);
 
   final List<Map> dropdownItems;
+  final String selectedValue;
   final Function onChanged;
 
   @override
@@ -18,18 +22,14 @@ class _MyDropDownState extends State<MyDropDown> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    selectedValue = getSelectedValue();
+    selectedValue = widget.selectedValue;
   }
 
+  @override
   void didUpdateWidget(oldWidget) {
     super.didUpdateWidget(oldWidget);
-    selectedValue = getSelectedValue();
+    selectedValue = widget.selectedValue;
   }
-
-  String getSelectedValue() => (widget.dropdownItems
-          .where((element) => element['isSelected'] == true)
-          .first)['value']
-      .toString();
 
   @override
   Widget build(BuildContext context) {

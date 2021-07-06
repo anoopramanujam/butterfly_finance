@@ -70,6 +70,7 @@ class _AccountAddEditState extends State<AccountAddEdit> {
                 ),
                 MyToggleButton(
                   toggleItems: _toggleItems,
+                  selectedItem: _selectedAccountType.toString(),
                   onPressed: (int selectedValue) {
                     _selectedAccountType = selectedValue;
                   },

@@ -7,10 +7,12 @@ class MyToggleButton extends StatefulWidget {
     Key? key,
     required this.toggleItems,
     required this.onPressed,
+    required this.selectedItem,
   }) : super(key: key);
 
   final List<Map> toggleItems;
   final Function onPressed;
+  final String selectedItem;
 
   @override
   _MyToggleButtonState createState() => _MyToggleButtonState();
@@ -31,7 +33,8 @@ class _MyToggleButtonState extends State<MyToggleButton> {
               child: Text(
             toggleItem['title'],
           ))));
-      _selections.add(toggleItem['isSelected']);
+      _selections.add(
+          toggleItem['value'].toString() == widget.selectedItem ? true : false);
     });
   }
 
