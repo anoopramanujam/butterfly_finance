@@ -123,6 +123,23 @@ class _TransactionAddEditState extends State<TransactionAddEdit> {
                           selectedTxnType: _selectedTxnType.toString(),
                           selectedFromAccount: _selectedFromAccount,
                           selectedToAccount: _selectedToAccount,
+                          onAccountsChange: (
+                              {txnType, fromAccount, toAccount}) {
+                            if (txnType != null) {
+                              _selectedTxnType = txnType;
+                            }
+                            if (fromAccount != null) {
+                              _selectedFromAccount = int.parse(fromAccount);
+                            }
+                            if (toAccount != null) {
+                              _selectedToAccount = int.parse(toAccount);
+                            }
+                            print(_selectedTxnType.toString() +
+                                ':' +
+                                _selectedFromAccount.toString() +
+                                ':' +
+                                _selectedToAccount.toString());
+                          },
                         );
                       } else {
                         return Center(
@@ -186,11 +203,12 @@ class _TransactionAddEditState extends State<TransactionAddEdit> {
                           return;
                         }
                         final transaction = TransactionModel(
-                          txnDate: _txnDate,
-                          amount: amount,
-                          description: _descriptionController.text,
-                          // type: _selectedTxnType,
-                        );
+                            txnDate: _txnDate,
+                            amount: amount,
+                            description: _descriptionController.text,
+                            type: _selectedTxnType,
+                            fromAccount: _selectedFromAccount,
+                            toAccount: _selectedToAccount);
 
                         if (_txnId == Constants.indexNewRecord) {
                           context.read<TransactionNotifier>().add(transaction);

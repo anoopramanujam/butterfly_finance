@@ -17,6 +17,9 @@ class TransactionListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String txnDate = DateFormat.yMMMMd().format(transaction.txnDate);
+    final String transferLabel = transaction.fromAccount.toString() +
+        ' to ' +
+        transaction.toAccount.toString();
     return Dismissible(
       key: UniqueKey(),
       direction: DismissDirection.endToStart,
@@ -27,6 +30,7 @@ class TransactionListItem extends StatelessWidget {
             SnackBar(content: const Text(Constants.infoTransactionDelete)));
       },
       child: (ListTile(
+        isThreeLine: true,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -34,7 +38,8 @@ class TransactionListItem extends StatelessWidget {
             Text(transaction.amount.toStringAsFixed(Constants.decimalPlaces)),
           ],
         ),
-        subtitle: Text(txnDate),
+        subtitle: Text(transferLabel + "\n" + txnDate),
+        // subtitle: Text('bow'),
         onTap: () {
           Navigator.push(
             context,

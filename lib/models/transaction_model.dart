@@ -17,7 +17,7 @@ class TransactionModel {
     this.txnId = Constants.indexNewRecord,
     this.fromAccount = Constants.accountBalance,
     this.toAccount = Constants.accountBalance,
-    this.type = Constants.txnTransfer,
+    this.type = Constants.txnExpense,
   });
 
   TransactionModel.fromMap(Map<String, dynamic> res)

@@ -13,6 +13,7 @@ class AccountDropdowns extends StatefulWidget {
     required this.accounts,
     required this.selectedFromAccount,
     required this.selectedToAccount,
+    required this.onAccountsChange,
   }) : super(key: key);
 
   final TransactionModel transaction;
@@ -20,6 +21,7 @@ class AccountDropdowns extends StatefulWidget {
   final String selectedTxnType;
   final int selectedFromAccount;
   final int selectedToAccount;
+  final Function onAccountsChange;
 
   @override
   _AccountDropdownsState createState() => _AccountDropdownsState();
@@ -53,11 +55,23 @@ class _AccountDropdownsState extends State<AccountDropdowns> {
     _toAccounts = getAccounts(_selectedTxnType, false);
 
     _fromAccountValue = widget.selectedFromAccount == Constants.indexNewRecord
-        ? _fromAccounts[0]['value'].toString()
+        ? setDefaultAccount(true)
         : widget.selectedFromAccount.toString();
     _toAccountValue = widget.selectedToAccount == Constants.indexNewRecord
-        ? _toAccounts[0]['value'].toString()
+        ? setDefaultAccount(false)
         : widget.selectedToAccount.toString();
+  }
+
+  String setDefaultAccount(bool isFromAccount) {
+    String defaultAccount = '';
+    if (isFromAccount) {
+      defaultAccount = _fromAccounts[0]['value'].toString();
+      widget.onAccountsChange(fromAccount: defaultAccount);
+    } else {
+      defaultAccount = _toAccounts[0]['value'].toString();
+      widget.onAccountsChange(toAccount: defaultAccount);
+    }
+    return defaultAccount;
   }
 
   List<Map> getAccounts(int selectedTxnType, bool fromAccount) {
@@ -105,6 +119,10 @@ class _AccountDropdownsState extends State<AccountDropdowns> {
                 widget.selectedToAccount == Constants.indexNewRecord
                     ? _toAccounts[0]['value'].toString()
                     : widget.selectedToAccount.toString();
+            widget.onAccountsChange(
+                txnType: selectedValue,
+                fromAccount: _fromAccountValue,
+                toAccount: _toAccountValue);
           });
         },
       ),
@@ -117,6 +135,7 @@ class _AccountDropdownsState extends State<AccountDropdowns> {
             selectedValue: _fromAccountValue,
             onChanged: (val) {
               _fromAccountValue = val;
+              widget.onAccountsChange(fromAccount: val);
             },
           ),
         ],
@@ -130,6 +149,7 @@ class _AccountDropdownsState extends State<AccountDropdowns> {
             selectedValue: _toAccountValue,
             onChanged: (val) {
               _toAccountValue = val;
+              widget.onAccountsChange(toAccount: val);
             },
           ),
         ],
