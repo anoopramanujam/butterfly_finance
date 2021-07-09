@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/transaction_model.dart';
+import '../models/transaction_detail.dart';
 import '../utils/db_helper.dart';
 
 class TransactionNotifier with ChangeNotifier {
@@ -7,6 +8,11 @@ class TransactionNotifier with ChangeNotifier {
 
   Future<List<TransactionModel>> get transactions async {
     final transactions = await db.getTransactions();
+    return transactions;
+  }
+
+  Future<List<TransactionDetailModel>> getDetailedTransactions() async {
+    final transactions = await db.getDetailedTransactions();
     return transactions;
   }
 
