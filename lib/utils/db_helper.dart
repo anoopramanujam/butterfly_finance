@@ -1,7 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../models/transaction_model.dart';
-import '../models/transaction_detail.dart';
+import '../models/transaction_detail_model.dart';
 import '../models/account_model.dart';
 
 import 'db_scripts.dart';
@@ -54,10 +54,10 @@ class DatabaseHelper {
   Future<List<TransactionDetailModel>> getDetailedTransactions() async {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.rawQuery('''
-      T.*, A1.name as fromAccountName, A2.name as toAccountName
+      select T.*, A1.name as fromAccountName, A2.name as toAccountName
       from transactions T
-      inner join accounts A1 on T.fromAccount = A1.name
-      inner join accounts A2 on  T.toAccount = A2.name
+      inner join accounts A1 on T.fromAccount = A1.accountId
+      inner join accounts A2 on  T.toAccount = A2.accountId
       ''');
     return queryResult.map((e) => TransactionDetailModel.fromMap(e)).toList();
   }

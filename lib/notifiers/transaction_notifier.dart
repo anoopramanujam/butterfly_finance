@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/transaction_model.dart';
-import '../models/transaction_detail.dart';
+import '../models/transaction_detail_model.dart';
 import '../utils/db_helper.dart';
 
 class TransactionNotifier with ChangeNotifier {
