@@ -35,7 +35,7 @@ class DbScripts {
         VALUES ('Misc. Expense',4)''',
     '''INSERT INTO transactions 
         (description, amount, type, fromAccount, ToAccount)
-        VALUES ('Starting Balance', 0, 0, 1, 2)'''
+        VALUES ('Initial Cash Balance', 0, 0, 1, 2)'''
   ];
 
   static const finalScripts = [

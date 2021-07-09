@@ -25,6 +25,9 @@ class Constants {
     'Expense',
   ];
 
+  static const accountValueBalance = 1;
+  static const accountValueCash = 2;
+
   static const tabHome = 0;
   static const tabAccounts = 1;
   static const tabReports = 2;

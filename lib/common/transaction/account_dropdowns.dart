@@ -102,58 +102,61 @@ class _AccountDropdownsState extends State<AccountDropdowns> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      MyToggleButton(
-        toggleItems: _toggleItems,
-        selectedItem: _selectedTxnType.toString(),
-        onPressed: (int selectedValue) {
-          setState(() {
-            _selectedTxnType = selectedValue;
-            _fromAccounts = getAccounts(selectedValue, true);
-            _toAccounts = getAccounts(selectedValue, false);
-            _fromAccountValue =
-                widget.selectedFromAccount == Constants.indexNewRecord
-                    ? _fromAccounts[0]['value'].toString()
-                    : widget.selectedFromAccount.toString();
-            _toAccountValue =
-                widget.selectedToAccount == Constants.indexNewRecord
-                    ? _toAccounts[0]['value'].toString()
-                    : widget.selectedToAccount.toString();
-            widget.onAccountsChange(
-                txnType: selectedValue,
-                fromAccount: _fromAccountValue,
-                toAccount: _toAccountValue);
-          });
-        },
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text('From Account'),
-          MyDropDown(
-            dropdownItems: _fromAccounts,
-            selectedValue: _fromAccountValue,
-            onChanged: (val) {
-              _fromAccountValue = val;
-              widget.onAccountsChange(fromAccount: val);
-            },
-          ),
-        ],
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text('To Account'),
-          MyDropDown(
-            dropdownItems: _toAccounts,
-            selectedValue: _toAccountValue,
-            onChanged: (val) {
-              _toAccountValue = val;
-              widget.onAccountsChange(toAccount: val);
-            },
-          ),
-        ],
-      ),
-    ]);
+    return _fromAccountValue == Constants.accountValueBalance.toString() ||
+            _toAccountValue == Constants.accountValueBalance.toString()
+        ? Center(child: Text('Balance Adjustment'))
+        : Column(children: [
+            MyToggleButton(
+              toggleItems: _toggleItems,
+              selectedItem: _selectedTxnType.toString(),
+              onPressed: (int selectedValue) {
+                setState(() {
+                  _selectedTxnType = selectedValue;
+                  _fromAccounts = getAccounts(selectedValue, true);
+                  _toAccounts = getAccounts(selectedValue, false);
+                  _fromAccountValue =
+                      widget.selectedFromAccount == Constants.indexNewRecord
+                          ? _fromAccounts[0]['value'].toString()
+                          : widget.selectedFromAccount.toString();
+                  _toAccountValue =
+                      widget.selectedToAccount == Constants.indexNewRecord
+                          ? _toAccounts[0]['value'].toString()
+                          : widget.selectedToAccount.toString();
+                  widget.onAccountsChange(
+                      txnType: selectedValue,
+                      fromAccount: _fromAccountValue,
+                      toAccount: _toAccountValue);
+                });
+              },
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text('From Account'),
+                MyDropDown(
+                  dropdownItems: _fromAccounts,
+                  selectedValue: _fromAccountValue,
+                  onChanged: (val) {
+                    _fromAccountValue = val;
+                    widget.onAccountsChange(fromAccount: val);
+                  },
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text('To Account'),
+                MyDropDown(
+                  dropdownItems: _toAccounts,
+                  selectedValue: _toAccountValue,
+                  onChanged: (val) {
+                    _toAccountValue = val;
+                    widget.onAccountsChange(toAccount: val);
+                  },
+                ),
+              ],
+            ),
+          ]);
   }
 }
