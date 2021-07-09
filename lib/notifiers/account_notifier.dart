@@ -1,5 +1,7 @@
+import 'package:butterfly_finance/utils/constants.dart';
 import 'package:flutter/material.dart';
 import '../models/account_model.dart';
+import '../models/transaction_model.dart';
 import '../utils/db_helper.dart';
 
 class AccountNotifier with ChangeNotifier {
@@ -21,7 +23,14 @@ class AccountNotifier with ChangeNotifier {
   }
 
   Future<void> add(AccountModel account) async {
-    await db.insertAccount(account);
+    int accountId = await db.insertAccount(account);
+    final transaction = TransactionModel(
+        txnDate: DateTime.now(),
+        description: 'Initial ' + account.name + ' Balance',
+        fromAccount: Constants.accountValueBalance,
+        toAccount: accountId,
+        type: Constants.txnTransfer);
+    await db.insertTransaction(transaction);
     notifyListeners();
   }
 
