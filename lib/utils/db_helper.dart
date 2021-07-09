@@ -14,16 +14,30 @@ class DatabaseHelper {
 
   Future<Database> get db async => _db ??= await initializeDB();
 
+  Future<void> executeScripts(database,
+      {int? oldVersion, int? newVersion}) async {
+    oldVersion ??= 0;
+    newVersion ??= DbScripts.finalScripts.length;
+    List<String> finalScripts = [];
+    for (var i = oldVersion; i < newVersion; i++) {
+      final versionScripts = DbScripts.finalScripts[i];
+      versionScripts.forEach((script) {
+        finalScripts.add(script);
+      });
+    }
+    Batch batch = database.batch();
+    finalScripts.forEach((sql) {
+      batch.execute(sql);
+    });
+    await batch.commit();
+  }
+
   Future<Database> initializeDB() async {
     String path = await getDatabasesPath();
     return openDatabase(
       join(path, 'butterfly_finance.db'),
       onCreate: (database, version) async {
-        Batch batch = database.batch();
-        DbScripts.initScripts.forEach((sql) {
-          batch.execute(sql);
-        });
-        await batch.commit();
+        executeScripts(database);
       },
       version: 1,
     );
