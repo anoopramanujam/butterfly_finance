@@ -22,6 +22,9 @@ class TransactionListItem extends StatelessWidget {
     final String transferLabel = transactionDetail.fromAccountName.toString() +
         ' to ' +
         transactionDetail.toAccountName.toString();
+    var currencyFormat = NumberFormat('#,###,##0.00', 'en-US');
+    final String displayAmount =
+        currencyFormat.format(transactionDetail.amount);
     return Dismissible(
       key: UniqueKey(),
       direction: DismissDirection.endToStart,
@@ -39,8 +42,7 @@ class TransactionListItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(transactionDetail.description),
-            Text(transactionDetail.amount
-                .toStringAsFixed(Constants.decimalPlaces)),
+            Text(displayAmount),
           ],
         ),
         subtitle: Text(transferLabel + "\n" + txnDate),
