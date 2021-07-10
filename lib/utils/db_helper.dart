@@ -58,6 +58,7 @@ class DatabaseHelper {
       from transactions T
       inner join accounts A1 on T.fromAccount = A1.accountId
       inner join accounts A2 on  T.toAccount = A2.accountId
+      order by txnDate desc
       ''');
     return queryResult.map((e) => TransactionDetailModel.fromMap(e)).toList();
   }
