@@ -8,6 +8,9 @@ import '../../utils/constants.dart';
 import '../../common/my_button.dart';
 import '../../common/my_textfield.dart';
 import '../../common/my_date_picker.dart';
+import '../../models/account_model.dart';
+import '../../notifiers/account_notifier.dart';
+import './account_dropdowns.dart';
 
 /// Add and Edit transactions
 class TransactionAddEdit extends StatefulWidget {
@@ -26,9 +29,17 @@ class _TransactionAddEditState extends State<TransactionAddEdit> {
   late String _txnDescription;
   late double _txnAmount;
 
+  late int _selectedTxnType;
+  late int _selectedFromAccount;
+  late int _selectedToAccount;
+
+  Future<List<AccountModel>>? _accounts;
+
   // textbox controllers
   late TextEditingController _descriptionController;
   late TextEditingController _amountController;
+
+  // String? dropdownValue;
 
   @override
   void initState() {
@@ -44,6 +55,24 @@ class _TransactionAddEditState extends State<TransactionAddEdit> {
         text: _txnAmount == 0.0
             ? ''
             : _txnAmount.toStringAsFixed(Constants.decimalPlaces));
+
+    _selectedTxnType = widget.transaction.type;
+    if (widget.transaction.txnId != Constants.indexNewRecord) {
+      _selectedFromAccount = widget.transaction.fromAccount;
+      _selectedToAccount = widget.transaction.toAccount;
+    } else {
+      _selectedFromAccount = Constants.indexNewRecord;
+      _selectedToAccount = Constants.indexNewRecord;
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final accountNotifier = Provider.of<AccountNotifier>(context);
+    _accounts = accountNotifier.getAllAccounts();
+    _selectedTxnType = widget.transaction.type;
+    // dropdownValue = '';
   }
 
   /// User has changed date
@@ -61,6 +90,64 @@ class _TransactionAddEditState extends State<TransactionAddEdit> {
                 horizontal: Constants.paddingWidth, vertical: 0),
             child: Column(
               children: [
+                SizedBox(
+                  height: Constants.dividerHeight,
+                ),
+
+                SizedBox(
+                  height: Constants.dividerHeight,
+                ),
+
+                FutureBuilder<List<AccountModel>>(
+                    future: _accounts,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<AccountModel>> snapshot) {
+                      if (snapshot.hasData) {
+                        final realAccounts = snapshot.data ?? [];
+
+                        List<Map> listAccounts = [];
+
+                        for (int i = 0; i < realAccounts.length; i++) {
+                          var _account = realAccounts[i];
+
+                          listAccounts.add({
+                            'title': _account.name,
+                            'value': _account.accountId,
+                            'type': _account.type,
+                          });
+                        }
+
+                        return AccountDropdowns(
+                          accounts: listAccounts,
+                          transaction: widget.transaction,
+                          selectedTxnType: _selectedTxnType.toString(),
+                          selectedFromAccount: _selectedFromAccount,
+                          selectedToAccount: _selectedToAccount,
+                          onAccountsChange: (
+                              {txnType, fromAccount, toAccount}) {
+                            if (txnType != null) {
+                              _selectedTxnType = txnType;
+                            }
+                            if (fromAccount != null) {
+                              _selectedFromAccount = int.parse(fromAccount);
+                            }
+                            if (toAccount != null) {
+                              _selectedToAccount = int.parse(toAccount);
+                            }
+                            print(_selectedTxnType.toString() +
+                                ':' +
+                                _selectedFromAccount.toString() +
+                                ':' +
+                                _selectedToAccount.toString());
+                          },
+                        );
+                      } else {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                    }),
+
                 SizedBox(
                   height: Constants.dividerHeight,
                 ),
@@ -118,7 +205,10 @@ class _TransactionAddEditState extends State<TransactionAddEdit> {
                         final transaction = TransactionModel(
                             txnDate: _txnDate,
                             amount: amount,
-                            description: _descriptionController.text);
+                            description: _descriptionController.text,
+                            type: _selectedTxnType,
+                            fromAccount: _selectedFromAccount,
+                            toAccount: _selectedToAccount);
 
                         if (_txnId == Constants.indexNewRecord) {
                           context.read<TransactionNotifier>().add(transaction);

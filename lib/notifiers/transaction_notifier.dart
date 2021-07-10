@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import '../models/transaction_model.dart';
-import '../utils/dbHelper.dart';
+import '../models/transaction_detail_model.dart';
+import '../utils/db_helper.dart';
 
 class TransactionNotifier with ChangeNotifier {
   final db = DatabaseHelper();
 
   Future<List<TransactionModel>> get transactions async {
     final transactions = await db.getTransactions();
+    return transactions;
+  }
+
+  Future<List<TransactionDetailModel>> getDetailedTransactions() async {
+    final transactions = await db.getDetailedTransactions();
     return transactions;
   }
 

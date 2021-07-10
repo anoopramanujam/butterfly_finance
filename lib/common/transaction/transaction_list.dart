@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/transaction_model.dart';
+import '../../models/transaction_detail_model.dart';
+import '../../models/account_model.dart';
 import '../../notifiers/transaction_notifier.dart';
 import './transaction_list_item.dart';
 
@@ -11,7 +12,8 @@ class TransactionList extends StatefulWidget {
 }
 
 class _TransactionListState extends State<TransactionList> {
-  Future<List<TransactionModel>>? transactions;
+  Future<List<TransactionDetailModel>>? transactionDetails;
+  Future<List<AccountModel>>? accounts;
 
   @override
   // Special Note
@@ -22,20 +24,22 @@ class _TransactionListState extends State<TransactionList> {
   //  here. Need to relook
   void didChangeDependencies() {
     super.didChangeDependencies();
-    transactions = Provider.of<TransactionNotifier>(context).transactions;
+    transactionDetails =
+        Provider.of<TransactionNotifier>(context).getDetailedTransactions();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<TransactionModel>>(
-        future: transactions,
+    return FutureBuilder<List<TransactionDetailModel>>(
+        future: transactionDetails,
         builder: (BuildContext context,
-            AsyncSnapshot<List<TransactionModel>> snapshot) {
+            AsyncSnapshot<List<TransactionDetailModel>> snapshot) {
           if (snapshot.hasData) {
             final realTransactions = snapshot.data ?? [];
             final listTransactions =
                 realTransactions.asMap().entries.map((transactionMap) {
-              return TransactionListItem(transaction: transactionMap.value);
+              return TransactionListItem(
+                  transactionDetail: transactionMap.value);
             });
             final divided = realTransactions.isNotEmpty
                 ? ListTile.divideTiles(
