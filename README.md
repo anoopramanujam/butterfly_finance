@@ -5,10 +5,6 @@ A free and open source application to manage your finances safely and securely.
 Easily manage your finances. Absolute privacy guaranteed. No ads, no network connection needed. (Network connection will be needed if backup and family sharing features are enabled).
 
 ### Current features:
-* Track cash transactions
-* Free, open-source and ad-free
-
-### Features in progress:
 * Double-entry accounting
 
 ### Proposed features:
