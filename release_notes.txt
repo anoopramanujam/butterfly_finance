@@ -1,0 +1,3 @@
+* Double-entry accounting
+
+If your app version number is older than 1.0.7, please Clear Data  
