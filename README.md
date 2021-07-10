@@ -1,4 +1,5 @@
 # Butterfly Finance
+[![Codemagic build status](https://api.codemagic.io/apps/60cdf5a49b56dfd49f86e5c6/60cdf5a49b56dfd49f86e5c5/status_badge.svg)](https://codemagic.io/apps/60cdf5a49b56dfd49f86e5c6/60cdf5a49b56dfd49f86e5c5/latest_build)
 
 A free and open source application to manage your finances safely and securely.
 
