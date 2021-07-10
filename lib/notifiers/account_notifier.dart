@@ -24,13 +24,20 @@ class AccountNotifier with ChangeNotifier {
 
   Future<void> add(AccountModel account) async {
     int accountId = await db.insertAccount(account);
-    final transaction = TransactionModel(
-        txnDate: DateTime.now(),
-        description: 'Initial ' + account.name + ' Balance',
-        fromAccount: Constants.accountValueBalance,
-        toAccount: accountId,
-        type: Constants.txnTransfer);
-    await db.insertTransaction(transaction);
+    if ([Constants.accountAsset, Constants.accountLiability]
+        .contains(account.type)) {
+      final transaction = TransactionModel(
+          txnDate: DateTime.now(),
+          description: 'Initial ' + account.name + ' Balance',
+          fromAccount: account.type == Constants.accountAsset
+              ? Constants.accountValueBalance
+              : accountId,
+          toAccount: account.type == Constants.accountAsset
+              ? accountId
+              : Constants.accountValueBalance,
+          type: Constants.txnTransfer);
+      await db.insertTransaction(transaction);
+    }
     notifyListeners();
   }
 
