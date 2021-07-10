@@ -1,3 +1,4 @@
-* Double-entry accounting
+* Minor bug fixes. 
 
-If your app version number is older than 1.0.7, please Clear Data  
+
+If your app version number is older than 1.0.7, please Delete current data, and re-install applicaton.
