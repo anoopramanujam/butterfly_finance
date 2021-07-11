@@ -19,9 +19,11 @@ class TransactionListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final String txnDate =
         DateFormat.yMMMMd().format(transactionDetail.txnDate);
-    final String transferLabel = transactionDetail.fromAccountName.toString() +
-        ' to ' +
-        transactionDetail.toAccountName.toString();
+    final mainText = (transactionDetail.description != '')
+        ? transactionDetail.description
+        : transactionDetail.fromAccountName.toString() +
+            ' to ' +
+            transactionDetail.toAccountName.toString();
     var currencyFormat = NumberFormat('#,###,##0.00', 'en-US');
     final String displayAmount =
         currencyFormat.format(transactionDetail.amount);
@@ -37,15 +39,14 @@ class TransactionListItem extends StatelessWidget {
             SnackBar(content: const Text(Constants.infoTransactionDelete)));
       },
       child: (ListTile(
-        isThreeLine: true,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(transactionDetail.description),
+            Text(mainText),
             Text(displayAmount),
           ],
         ),
-        subtitle: Text(transferLabel + "\n" + txnDate),
+        subtitle: Text(txnDate),
         // subtitle: Text('bow'),
         onTap: () {
           final transaction = TransactionModel(
