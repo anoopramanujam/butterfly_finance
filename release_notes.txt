@@ -1,4 +1,3 @@
-* Minor bug fixes. 
-
-
-If your app version number is older than 1.0.7, please Delete current data, and re-install applicaton.
+* Make dashboard less dense. 
+<br/>
+ATTENTION: If your app version number is older than 1.0.7, please delete current data, and re-install applicaton.
